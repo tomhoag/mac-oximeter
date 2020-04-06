@@ -57,7 +57,7 @@ class OximeterReport:NSObject {
     
     var start:Date {
         get {
-            if (14 > header.characters.count) { return Date() }
+            if (14 > header.count) { return Date() }
             let year = header.substring(from: 0, to: 2)
             let month = header.substring(from: 2, to: 4)
             let day = header.substring(from:4, to: 6)
@@ -92,7 +92,6 @@ class OximeterReport:NSObject {
     
     @objc var startDate:String {
         get {
-            print(">>>\(dateFormatterPrint.string(from:start))<<<")
             return dateFormatterPrint.string(from:start)
         }
     }
@@ -139,10 +138,8 @@ class OximeterReport:NSObject {
     @objc var pulse:[Int] {
         get {
             var pairs = data.pairs
-            print("pairs length: \(pairs.count)")
             pairs.removeFirst()
             pairs.removeFirst()
-            print("pairs length: \(pairs.count)")
             return pairs.enumerated().compactMap { tuple in
                 tuple.offset.isMultiple(of: 3) ? Int(tuple.element, radix:16) : nil
             }
@@ -164,12 +161,19 @@ extension Collection {
     }
 }
 
+protocol OximeterDeviceDelegate {
+    
+    func reportDidComplete(report:OximeterReport)
+}
+
 class OximeterDeviceController: NSObject, ORSSerialPortDelegate {
     
     override init() {
         super.init()
     }
     
+    var delegate: OximeterDeviceDelegate?
+
     @objc dynamic var reports = [OximeterReport]()
     
     enum SerialBoardRequestType: Int {
@@ -306,10 +310,7 @@ class OximeterDeviceController: NSObject, ORSSerialPortDelegate {
             data = responseData.subdata(in:3..<length)
             reports[reportIndex].data = data.hexDescription
             
-            let pr = reports[reportIndex].pulse
-            let sp02 = reports[reportIndex].sp02
-            print("pr: \(pr)")
-            print("sp: \(sp02)")
+            delegate?.reportDidComplete(report: reports[reportIndex])
         }
     }
     

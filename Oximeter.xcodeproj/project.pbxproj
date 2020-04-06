@@ -130,7 +130,7 @@
 				TargetAttributes = {
 					AB9693EB2437F54600015CF9 = {
 						CreatedOnToolsVersion = 11.3.1;
-						LastSwiftMigration = 1140;
+						LastSwiftMigration = "";
 					};
 				};
 			};
@@ -369,7 +369,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.squarepi.Oximeter;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "Mac Wildcard Provisioning Profile";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -396,7 +396,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.squarepi.Oximeter;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "Mac Wildcard Provisioning Profile";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
