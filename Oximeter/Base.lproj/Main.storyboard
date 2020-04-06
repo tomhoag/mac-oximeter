@@ -912,7 +912,7 @@
                                 <rect key="frame" x="24" y="385" width="538" height="23"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" lineBreakMode="truncatingTail" alignment="center" title="Chart Title" id="uNY-N3-xeq">
-                                    <font key="font" metaFont="system" size="14"/>
+                                    <font key="font" metaFont="menu" size="14"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                     <connections>
