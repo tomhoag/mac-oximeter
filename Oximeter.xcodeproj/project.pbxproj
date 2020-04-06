@@ -1,0 +1,440 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 51;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		AB1143E024382FCA00E83CCB /* DataExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB1143DF24382FCA00E83CCB /* DataExtension.swift */; };
+		AB9693F02437F54600015CF9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB9693EF2437F54600015CF9 /* AppDelegate.swift */; };
+		AB9693F22437F54600015CF9 /* OximeterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB9693F12437F54600015CF9 /* OximeterViewController.swift */; };
+		AB9693F52437F54600015CF9 /* Oximeter.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = AB9693F32437F54600015CF9 /* Oximeter.xcdatamodeld */; };
+		AB9693F72437F54800015CF9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AB9693F62437F54800015CF9 /* Assets.xcassets */; };
+		AB9693FA2437F54800015CF9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AB9693F82437F54800015CF9 /* Main.storyboard */; };
+		AB9694032437FB1E00015CF9 /* OximeterDeviceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB9694022437FB1E00015CF9 /* OximeterDeviceController.swift */; };
+		C0696F9DE005855EC1837DD1 /* Pods_Oximeter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C89E1021D4CADDEC9EE7AC3B /* Pods_Oximeter.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		AB1143DF24382FCA00E83CCB /* DataExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataExtension.swift; sourceTree = "<group>"; };
+		AB9693EC2437F54600015CF9 /* Oximeter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Oximeter.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		AB9693EF2437F54600015CF9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		AB9693F12437F54600015CF9 /* OximeterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OximeterViewController.swift; sourceTree = "<group>"; };
+		AB9693F42437F54600015CF9 /* Oximeter.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Oximeter.xcdatamodel; sourceTree = "<group>"; };
+		AB9693F62437F54800015CF9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		AB9693F92437F54800015CF9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		AB9693FB2437F54800015CF9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		AB9693FC2437F54800015CF9 /* Oximeter.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Oximeter.entitlements; sourceTree = "<group>"; };
+		AB9694022437FB1E00015CF9 /* OximeterDeviceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OximeterDeviceController.swift; sourceTree = "<group>"; };
+		C25D5E1D9B27FA213343498C /* Pods-Oximeter.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Oximeter.debug.xcconfig"; path = "Target Support Files/Pods-Oximeter/Pods-Oximeter.debug.xcconfig"; sourceTree = "<group>"; };
+		C89E1021D4CADDEC9EE7AC3B /* Pods_Oximeter.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Oximeter.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E4B02F335CCCEA9587E0CC11 /* Pods-Oximeter.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Oximeter.release.xcconfig"; path = "Target Support Files/Pods-Oximeter/Pods-Oximeter.release.xcconfig"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		AB9693E92437F54600015CF9 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C0696F9DE005855EC1837DD1 /* Pods_Oximeter.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		8D97EC01686C90BE074B448D /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				C89E1021D4CADDEC9EE7AC3B /* Pods_Oximeter.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		AB9693E32437F54600015CF9 = {
+			isa = PBXGroup;
+			children = (
+				AB9693EE2437F54600015CF9 /* Oximeter */,
+				AB9693ED2437F54600015CF9 /* Products */,
+				BD221B7FF27988705C1E1E1E /* Pods */,
+				8D97EC01686C90BE074B448D /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		AB9693ED2437F54600015CF9 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				AB9693EC2437F54600015CF9 /* Oximeter.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		AB9693EE2437F54600015CF9 /* Oximeter */ = {
+			isa = PBXGroup;
+			children = (
+				AB9693EF2437F54600015CF9 /* AppDelegate.swift */,
+				AB9693F12437F54600015CF9 /* OximeterViewController.swift */,
+				AB9694022437FB1E00015CF9 /* OximeterDeviceController.swift */,
+				AB1143DF24382FCA00E83CCB /* DataExtension.swift */,
+				AB9693F62437F54800015CF9 /* Assets.xcassets */,
+				AB9693F82437F54800015CF9 /* Main.storyboard */,
+				AB9693FB2437F54800015CF9 /* Info.plist */,
+				AB9693FC2437F54800015CF9 /* Oximeter.entitlements */,
+				AB9693F32437F54600015CF9 /* Oximeter.xcdatamodeld */,
+			);
+			path = Oximeter;
+			sourceTree = "<group>";
+		};
+		BD221B7FF27988705C1E1E1E /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				C25D5E1D9B27FA213343498C /* Pods-Oximeter.debug.xcconfig */,
+				E4B02F335CCCEA9587E0CC11 /* Pods-Oximeter.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		AB9693EB2437F54600015CF9 /* Oximeter */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AB9693FF2437F54800015CF9 /* Build configuration list for PBXNativeTarget "Oximeter" */;
+			buildPhases = (
+				0770D7AE95055305401F2C6C /* [CP] Check Pods Manifest.lock */,
+				AB9693E82437F54600015CF9 /* Sources */,
+				AB9693E92437F54600015CF9 /* Frameworks */,
+				AB9693EA2437F54600015CF9 /* Resources */,
+				9EC7B60E9A6226B51F60C27D /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Oximeter;
+			productName = Oximeter;
+			productReference = AB9693EC2437F54600015CF9 /* Oximeter.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		AB9693E42437F54600015CF9 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1130;
+				LastUpgradeCheck = 1130;
+				ORGANIZATIONNAME = "SquarePi Software";
+				TargetAttributes = {
+					AB9693EB2437F54600015CF9 = {
+						CreatedOnToolsVersion = 11.3.1;
+						LastSwiftMigration = 1140;
+					};
+				};
+			};
+			buildConfigurationList = AB9693E72437F54600015CF9 /* Build configuration list for PBXProject "Oximeter" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = AB9693E32437F54600015CF9;
+			productRefGroup = AB9693ED2437F54600015CF9 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				AB9693EB2437F54600015CF9 /* Oximeter */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		AB9693EA2437F54600015CF9 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AB9693F72437F54800015CF9 /* Assets.xcassets in Resources */,
+				AB9693FA2437F54800015CF9 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		0770D7AE95055305401F2C6C /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Oximeter-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		9EC7B60E9A6226B51F60C27D /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Oximeter/Pods-Oximeter-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Oximeter/Pods-Oximeter-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Oximeter/Pods-Oximeter-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		AB9693E82437F54600015CF9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AB9693F52437F54600015CF9 /* Oximeter.xcdatamodeld in Sources */,
+				AB9693F22437F54600015CF9 /* OximeterViewController.swift in Sources */,
+				AB9694032437FB1E00015CF9 /* OximeterDeviceController.swift in Sources */,
+				AB9693F02437F54600015CF9 /* AppDelegate.swift in Sources */,
+				AB1143E024382FCA00E83CCB /* DataExtension.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		AB9693F82437F54800015CF9 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				AB9693F92437F54800015CF9 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		AB9693FD2437F54800015CF9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		AB9693FE2437F54800015CF9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+			};
+			name = Release;
+		};
+		AB9694002437F54800015CF9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = C25D5E1D9B27FA213343498C /* Pods-Oximeter.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Oximeter/Oximeter.entitlements;
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_STYLE = Manual;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 4MUC8K263B;
+				ENABLE_HARDENED_RUNTIME = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
+				INFOPLIST_FILE = Oximeter/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.squarepi.Oximeter;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "Mac Wildcard Provisioning Profile";
+				SWIFT_VERSION = 4.2;
+			};
+			name = Debug;
+		};
+		AB9694012437F54800015CF9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = E4B02F335CCCEA9587E0CC11 /* Pods-Oximeter.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Oximeter/Oximeter.entitlements;
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_STYLE = Manual;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 4MUC8K263B;
+				ENABLE_HARDENED_RUNTIME = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
+				INFOPLIST_FILE = Oximeter/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.squarepi.Oximeter;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "Mac Wildcard Provisioning Profile";
+				SWIFT_VERSION = 4.2;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		AB9693E72437F54600015CF9 /* Build configuration list for PBXProject "Oximeter" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AB9693FD2437F54800015CF9 /* Debug */,
+				AB9693FE2437F54800015CF9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AB9693FF2437F54800015CF9 /* Build configuration list for PBXNativeTarget "Oximeter" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AB9694002437F54800015CF9 /* Debug */,
+				AB9694012437F54800015CF9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		AB9693F32437F54600015CF9 /* Oximeter.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				AB9693F42437F54600015CF9 /* Oximeter.xcdatamodel */,
+			);
+			currentVersion = AB9693F42437F54600015CF9 /* Oximeter.xcdatamodel */;
+			path = Oximeter.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = AB9693E42437F54600015CF9 /* Project object */;
+}
