@@ -12,14 +12,12 @@ import Charts
 
 class OximeterViewController: NSViewController, NSTableViewDelegate, OximeterDeviceDelegate {
 
-    
-
     @IBOutlet weak var reportTable: NSTableView!
     
     @IBOutlet weak var chartView: LineChartView!
     
     @objc dynamic let serialPortManager = ORSSerialPortManager.shared()
-    @objc dynamic let boardController = OximeterDeviceController()
+    @objc dynamic var boardController:OximeterDeviceController?
     
     @objc dynamic var chartTitle = ""
 
@@ -33,7 +31,7 @@ class OximeterViewController: NSViewController, NSTableViewDelegate, OximeterDev
 
         // Do any additional setup after loading the view.
         reportTable.delegate = self
-        boardController.delegate = self
+//        boardController.delegate = self
         
         chartView.noDataText = "Select a report above"
         chartView.backgroundColor = NSUIColor.white

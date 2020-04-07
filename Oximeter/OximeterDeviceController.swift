@@ -30,15 +30,22 @@ import ORSSerial
 let kTimeoutDuration = 0.5
 
 
-protocol OximeterDeviceDelegate {
+@objc protocol OximeterDeviceDelegate {
     
-    func reportDidComplete(report:OximeterReport)
+    @objc optional func didGetNumberOfReports(_ numberOfReports:Int)
+    @objc optional func didGetReportHeader(report:OximeterReport)
+    @objc optional func didGetReportData(report:OximeterReport)
 }
 
 class OximeterDeviceController: NSObject, ORSSerialPortDelegate {
     
     override init() {
         super.init()
+    }
+    
+    convenience init(port:ORSSerialPort) {
+        self.init()
+        serialPort = port
     }
     
     var delegate: OximeterDeviceDelegate?
@@ -62,11 +69,11 @@ class OximeterDeviceController: NSObject, ORSSerialPortDelegate {
     
     @objc func pollingTimerFired(_ timer: Timer) {
         print("firing \(String(describing: nextCommandFunction))")
-        nextCommandFunction(reportIndex)
+//        nextCommandFunction(reportIndex)
     }
     
     // MARK: Sending Commands
-    fileprivate func handshake(unused:Int) {
+   func handshake(unused:Int) {
         print("sending handshake");
         let command = Data(hexString:"55AA01")!
         let prefix:Data? = nil
@@ -80,7 +87,7 @@ class OximeterDeviceController: NSObject, ORSSerialPortDelegate {
         serialPort?.send(request)
     }
     
-    fileprivate func getNumberOfReports(unused:Int) {
+    func getNumberOfReports(unused:Int) {
         let opcode = "55AA02"
         let command = Data(hexString:opcode)!
         let prefix = Data(hexString:opcode)!
@@ -93,7 +100,7 @@ class OximeterDeviceController: NSObject, ORSSerialPortDelegate {
         serialPort?.send(request)
     }
     
-    fileprivate func getReportHeader(index:Int) {
+    func getReportHeader(index:Int) {
         let opcode = "55AA03"
         let command = Data(hexString: String(format:"\(opcode)%04X", index))! // 55 AA 03 00 01
         print("sending \(command.hexDescription) (getReportHeader \(index)")
@@ -150,6 +157,8 @@ class OximeterDeviceController: NSObject, ORSSerialPortDelegate {
             
             numberOfReports = UInt16(bigEndian: responseData.subdata(in: 3..<5).withUnsafeBytes { $0.pointee })
             
+            delegate?.didGetNumberOfReports?(Int(numberOfReports))
+            
             print("numberOfReports: \(numberOfReports)")
             if(numberOfReports > 0) {
                 reportIndex = 1
@@ -167,6 +176,8 @@ class OximeterDeviceController: NSObject, ORSSerialPortDelegate {
             report.header = header.hexDescription
             reports.append(report)
             
+            delegate?.didGetReportHeader?(report: report)
+            
             reportIndex = reportIndex + 1
             if(reportIndex > numberOfReports) {
                 pollingTimer?.invalidate()
@@ -179,7 +190,7 @@ class OximeterDeviceController: NSObject, ORSSerialPortDelegate {
             data = responseData.subdata(in:3..<length)
             reports[reportIndex].data = data.hexDescription
             
-            delegate?.reportDidComplete(report: reports[reportIndex])
+            delegate?.didGetReportData?(report: reports[reportIndex])
         }
     }
     
@@ -207,31 +218,16 @@ class OximeterDeviceController: NSObject, ORSSerialPortDelegate {
         }
         didSet {
             if let port = serialPort {
-                port.baudRate = 38400
-                port.parity = .none
-                port.numberOfStopBits = 1
-                port.delegate = self
+//                port.baudRate = 38400
+//                port.parity = .none
+//                port.numberOfStopBits = 1
+//                port.delegate = self
 //                port.rts = true
-                port.open()
+//                port.open()
             }
         }
     }
-    
-//    @objc dynamic fileprivate(set) internal var temperature: Int = 0
-//
-//    @objc dynamic fileprivate var internalLEDOn = false
-//
-//    class func keyPathsForValuesAffectingLEDOn() -> NSSet { return NSSet(object: "internalLEDOn") }
-//    @objc dynamic var LEDOn: Bool {
-//        get {
-//            return internalLEDOn
-//        }
-//        set(newValue) {
-//            internalLEDOn = newValue
-//            sendCommandToSetLEDToState(newValue)
-//        }
-//    }
-//
+
     fileprivate var pollingTimer: Timer? {
         willSet {
             if let timer = pollingTimer {
