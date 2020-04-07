@@ -19,7 +19,7 @@ class OximeterReport:NSObject {
     override init() {
         super.init()
         dateFormatterGet.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        dateFormatterPrint.dateFormat = "MM/dd/yyy hh:mm:ss a"
+        dateFormatterPrint.dateFormat = "M/dd/yy h:mm:ss a"
     }
     
     var start:Date {
@@ -69,9 +69,9 @@ class OximeterReport:NSObject {
         }
     }
     
-    @objc var timingInterval:String {
+    @objc var timingInterval:Int {
         get {
-            return "\(header.substring(from:12, to:14))"
+            return Int(header.substring(from:12, to:14))!
         }
     }
     

@@ -60,7 +60,7 @@ class OximeterViewController: NSViewController, NSTableViewDelegate, OximeterDev
     
     func chartUpdate(_ report:OximeterReport) {
         
-        let interval = Int(report.timingInterval)!
+        let interval = report.timingInterval
         let startDateInterval = report.start.timeIntervalSince1970
         
         var lineChartEntry = [ChartDataEntry]()
