@@ -19,6 +19,7 @@ class OximeterViewController: NSViewController, NSTableViewDelegate, OximeterDev
     @objc dynamic let oximeter:OximeterDeviceController = OximeterDeviceController()
     @objc dynamic var reports = [OximeterReport]()
     @objc dynamic var chartTitle = ""
+    @objc dynamic var connecting = false
     
     // MARK: - vars
     
@@ -45,6 +46,7 @@ class OximeterViewController: NSViewController, NSTableViewDelegate, OximeterDev
         
         connectTries = 0
         // leverage the delegate response to bootstrap the search and connect
+        connecting = true
         didConnect(port: nil, success: false)
     }
     
@@ -148,6 +150,7 @@ class OximeterViewController: NSViewController, NSTableViewDelegate, OximeterDev
         let availablePorts = ORSSerialPortManager.shared().availablePorts
         if success {
             print("yay! \(port) ready to go yo")
+            connecting = false
             oximeter.getNumberOfReports()
         } else {
             print("sad trombone :( \(port) couldn't be opened")
@@ -167,6 +170,7 @@ class OximeterViewController: NSViewController, NSTableViewDelegate, OximeterDev
                         didConnect(port: nil, success: false)
                     } else {
                         print("tried to connect \(maxConnectTries) times -- no beuno")
+                        connecting = false
                     }
                 }
             } else {
