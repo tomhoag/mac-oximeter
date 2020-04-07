@@ -18,13 +18,13 @@ class OximeterViewController: NSViewController, NSTableViewDelegate, OximeterDev
     @IBOutlet weak var chartView: LineChartView!
     
     @objc dynamic let serialPortManager = ORSSerialPortManager.shared()
-    @objc dynamic let boardController:OximeterDeviceController = OximeterDeviceController()
+    @objc dynamic let oximeter:OximeterDeviceController = OximeterDeviceController()
     
     @objc dynamic var chartTitle = ""
 
     @IBAction func connect(_ sender: Any) {
         let port = ORSSerialPort(path: "/dev/tty.usbserial")
-        boardController.serialPort = port
+        oximeter.serialPort = port
     }
     
     fileprivate var numberOfReports = 0
@@ -37,7 +37,7 @@ class OximeterViewController: NSViewController, NSTableViewDelegate, OximeterDev
 
         // Do any additional setup after loading the view.
         reportTable.delegate = self
-        boardController.delegate = self
+        oximeter.delegate = self
         
         chartView.noDataText = "Select a report above"
         chartView.backgroundColor = NSUIColor.white
@@ -85,39 +85,39 @@ class OximeterViewController: NSViewController, NSTableViewDelegate, OximeterDev
         chartView.data = data
         
         chartView.animate(xAxisDuration: 1.0, yAxisDuration: 0.0)
-        chartTitle = "\(report.startDate)-\(report.endDate) Interval:\(report.timingInterval) Mode:\(report.mode)"
+        chartTitle = "\(report.startDate) - \(report.endDate) Interval:\(report.timingInterval) Mode:\(report.mode)"
     }
     
     //  MARK: - reportTable Delegate
     
     func tableViewSelectionDidChange(_ notification: Notification) {
         lastSelectedIndex = reportTable.selectedRow
-        boardController.getReportData(reportNumber: lastSelectedIndex+1)
+        oximeter.getReportData(reportNumber: lastSelectedIndex+1)
     }
     
     // MARK: - OximeterDeviceController Delegate
     
     func didOpenSerialPort(port: ORSSerialPort) {
         print("didOpenSerialPort")
-        boardController.handshake(unused: 0)
+        oximeter.handshake(unused: 0)
     }
     
     func didFindDevice(port: ORSSerialPort) {
         print("didFindDevice")
-        boardController.getNumberOfReports(unused: 0)
+        oximeter.getNumberOfReports(unused: 0)
     }
     
     func didGetNumberOfReports(numberOfReports: Int) {
         print("number of reports: \(numberOfReports)")
         self.numberOfReports = numberOfReports
-        boardController.getReportHeader(reportNumber: 1)
+        oximeter.getReportHeader(reportNumber: 1)
     }
     
     func didGetReportHeader(report: OximeterReport) {
         self.reports.append(report)
         print("didGetReportHeader: \(report.number)")
         if report.number < self.numberOfReports {
-            boardController.getReportHeader(reportNumber: report.number+1)
+            oximeter.getReportHeader(reportNumber: report.number+1)
         }
     }
     

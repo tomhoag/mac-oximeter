@@ -725,7 +725,7 @@
                                     </menu>
                                 </popUpButtonCell>
                                 <connections>
-                                    <binding destination="XfG-lQ-9wD" name="selectedObject" keyPath="boardController.serialPort" previousBinding="UnW-CB-A1F" id="l0o-Kt-9qI"/>
+                                    <binding destination="XfG-lQ-9wD" name="selectedObject" keyPath="oximeter.serialPort" previousBinding="UnW-CB-A1F" id="9wx-SX-N2W"/>
                                     <binding destination="XfG-lQ-9wD" name="content" keyPath="serialPortManager.availablePorts" id="hDA-ir-GeK"/>
                                     <binding destination="XfG-lQ-9wD" name="contentValues" keyPath="serialPortManager.availablePorts.name" previousBinding="hDA-ir-GeK" id="UnW-CB-A1F"/>
                                 </connections>
@@ -941,7 +941,7 @@
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
                 <arrayController id="BAK-sc-nT5" userLabel="Reports">
                     <connections>
-                        <binding destination="XfG-lQ-9wD" name="contentArray" keyPath="boardController.reports" id="MU9-F4-diK"/>
+                        <binding destination="XfG-lQ-9wD" name="contentArray" keyPath="reports" id="2TD-cH-q4f"/>
                     </connections>
                 </arrayController>
                 <userDefaultsController representsSharedInstance="YES" id="K4t-6R-owd"/>
