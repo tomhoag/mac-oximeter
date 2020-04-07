@@ -48,7 +48,7 @@ class OximeterViewController: NSViewController, NSTableViewDelegate, OximeterDev
         dummy.header = "200328205541012200B4"
         reports.append(dummy)
         dummy = OximeterReport()
-        dummy.header = "20032720280201220078"
+        dummy.header = "20032720280201420078"
         reports.append(dummy)
     }
 

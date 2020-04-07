@@ -82,7 +82,7 @@ class OximeterReport:NSObject {
             if (34 == m) {
                 return "Adult"
             } else if (66 == m) {
-                return "Ped"
+                return "Pediatric"
             } else {
                 return "Unk"
             }
