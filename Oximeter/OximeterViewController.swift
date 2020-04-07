@@ -10,36 +10,6 @@ import Cocoa
 import ORSSerial
 import Charts
 
-class OXTextFieldCell: NSTableHeaderCell {
-
-    open override func titleRect(forBounds theRect: NSRect) -> NSRect {
-        var titleFrame = super.titleRect(forBounds: theRect)
-        let titleSize = self.attributedStringValue.size()
-        // TODO: the +4 below is a hack
-        titleFrame.origin.y = theRect.origin.y - 1.0 + (theRect.size.height - titleSize.height) / 2.0 + 4
-        return titleFrame
-    }
-
-    open override func drawInterior(withFrame cellFrame: NSRect, in controlView: NSView) {
-        let titleRect = self.titleRect(forBounds: cellFrame)
-        self.attributedStringValue.draw(in: titleRect)
-    }
-}
-
-extension NSMutableAttributedString {
-    func replaceFont(with font: NSFont) {
-        beginEditing()
-        self.enumerateAttribute(.font, in: NSRange(location: 0, length: self.length)) { (value, range, stop) in
-            if let f = value as? NSFont {
-                let ufd = f.fontDescriptor.withFamily(font.familyName!).withSymbolicTraits(f.fontDescriptor.symbolicTraits)
-                let newFont = NSFont(descriptor: ufd, size: font.pointSize)
-                removeAttribute(.font, range: range)
-                addAttribute(.font, value: newFont as Any, range: range)
-            }
-        }
-        endEditing()
-    }
-}
 
 class OximeterViewController: NSViewController, NSTableViewDelegate, OximeterDeviceDelegate {
     
@@ -79,15 +49,12 @@ class OximeterViewController: NSViewController, NSTableViewDelegate, OximeterDev
         tableView.tableColumns.forEach { (column) in // why can't this be done in the storyboard??
             let exAttr = NSMutableAttributedString(attributedString: column.headerCell.attributedStringValue)
             exAttr.replaceFont(with: NSFont.systemFont(ofSize: 16))
-            column.headerCell.attributedStringValue = exAttr
             
-            let oxc = OXTextFieldCell(textCell: "foo")
+            let oxc = OxTextFieldCell()
             oxc.attributedStringValue = exAttr
             column.headerCell = oxc
         }
         
-        tableView.reloadData()
-
         var dummy = OximeterReport()
         dummy.header = "200328205541012200B4"
         reports.append(dummy)
@@ -143,7 +110,11 @@ class OximeterViewController: NSViewController, NSTableViewDelegate, OximeterDev
     
     func tableViewSelectionDidChange(_ notification: Notification) {
         lastSelectedIndex = reportTable.selectedRow
-        oximeter.getReportData(reportNumber: lastSelectedIndex+1)
+        if reports[lastSelectedIndex].data == "" {
+            oximeter.getReportData(reportNumber: lastSelectedIndex+1)
+        } else {
+            chartUpdate(reports[lastSelectedIndex])
+        }
     }
     
     // MARK: - OximeterDeviceController Delegate
@@ -194,3 +165,18 @@ class XAxisDateFormatter : IAxisValueFormatter {
     }
 }
 
+class OxTextFieldCell: NSTableHeaderCell {
+
+    open override func titleRect(forBounds theRect: NSRect) -> NSRect {
+        var titleFrame = super.titleRect(forBounds: theRect)
+        let titleSize = self.attributedStringValue.size()
+        // TODO: the +4 below is a hack
+        titleFrame.origin.y = theRect.origin.y - 1.0 + (theRect.size.height - titleSize.height) / 2.0 + 4
+        return titleFrame
+    }
+
+    open override func drawInterior(withFrame cellFrame: NSRect, in controlView: NSView) {
+        let titleRect = self.titleRect(forBounds: cellFrame)
+        self.attributedStringValue.draw(in: titleRect)
+    }
+}
