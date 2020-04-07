@@ -17,6 +17,7 @@
 		ABB6AD47243BCB85005D4094 /* CollectionExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABB6AD44243BCB84005D4094 /* CollectionExtension.swift */; };
 		ABB6AD48243BCB85005D4094 /* OximeterReport.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABB6AD45243BCB85005D4094 /* OximeterReport.swift */; };
 		ABB6AD49243BCB85005D4094 /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABB6AD46243BCB85005D4094 /* StringExtension.swift */; };
+		ABB6AD4E243C0F46005D4094 /* DeviceFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABB6AD4D243C0F46005D4094 /* DeviceFinder.swift */; };
 		C0696F9DE005855EC1837DD1 /* Pods_Oximeter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C89E1021D4CADDEC9EE7AC3B /* Pods_Oximeter.framework */; };
 /* End PBXBuildFile section */
 
@@ -34,6 +35,7 @@
 		ABB6AD44243BCB84005D4094 /* CollectionExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionExtension.swift; sourceTree = "<group>"; };
 		ABB6AD45243BCB85005D4094 /* OximeterReport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OximeterReport.swift; sourceTree = "<group>"; };
 		ABB6AD46243BCB85005D4094 /* StringExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
+		ABB6AD4D243C0F46005D4094 /* DeviceFinder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceFinder.swift; sourceTree = "<group>"; };
 		C25D5E1D9B27FA213343498C /* Pods-Oximeter.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Oximeter.debug.xcconfig"; path = "Target Support Files/Pods-Oximeter/Pods-Oximeter.debug.xcconfig"; sourceTree = "<group>"; };
 		C89E1021D4CADDEC9EE7AC3B /* Pods_Oximeter.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Oximeter.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E4B02F335CCCEA9587E0CC11 /* Pods-Oximeter.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Oximeter.release.xcconfig"; path = "Target Support Files/Pods-Oximeter/Pods-Oximeter.release.xcconfig"; sourceTree = "<group>"; };
@@ -80,6 +82,7 @@
 		AB9693EE2437F54600015CF9 /* Oximeter */ = {
 			isa = PBXGroup;
 			children = (
+				ABB6AD4D243C0F46005D4094 /* DeviceFinder.swift */,
 				AB9693EF2437F54600015CF9 /* AppDelegate.swift */,
 				AB9693F12437F54600015CF9 /* OximeterViewController.swift */,
 				AB9694022437FB1E00015CF9 /* OximeterDeviceController.swift */,
@@ -222,6 +225,7 @@
 			files = (
 				AB9693F52437F54600015CF9 /* Oximeter.xcdatamodeld in Sources */,
 				AB9693F22437F54600015CF9 /* OximeterViewController.swift in Sources */,
+				ABB6AD4E243C0F46005D4094 /* DeviceFinder.swift in Sources */,
 				AB9694032437FB1E00015CF9 /* OximeterDeviceController.swift in Sources */,
 				AB9693F02437F54600015CF9 /* AppDelegate.swift in Sources */,
 				ABB6AD49243BCB85005D4094 /* StringExtension.swift in Sources */,

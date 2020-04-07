@@ -10,33 +10,38 @@ import Cocoa
 import ORSSerial
 import Charts
 
-class OximeterViewController: NSViewController, NSTableViewDelegate, OximeterDeviceDelegate {
 
-    @IBOutlet weak var reportTable: NSTableView!
+class OximeterViewController: NSViewController, NSTableViewDelegate, OximeterDeviceDelegate {
     
+    @IBOutlet weak var reportTable: NSTableView!
+
     @IBOutlet weak var chartView: LineChartView!
     
     @objc dynamic let serialPortManager = ORSSerialPortManager.shared()
-    @objc dynamic var boardController:OximeterDeviceController?
+    @objc dynamic let boardController:OximeterDeviceController = OximeterDeviceController()
     
     @objc dynamic var chartTitle = ""
 
+    @IBAction func connect(_ sender: Any) {
+        let port = ORSSerialPort(path: "/dev/tty.usbserial")
+        boardController.serialPort = port
+    }
     
-//    @objc dynamic var selectionIndexes = IndexSet()
-    
-    var lastIndex = 0
+    fileprivate var numberOfReports = 0
+    @objc dynamic var reports = [OximeterReport]()
+
+    var lastSelectedIndex = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
         reportTable.delegate = self
-//        boardController.delegate = self
+        boardController.delegate = self
         
         chartView.noDataText = "Select a report above"
         chartView.backgroundColor = NSUIColor.white
         chartView.legend.font = NSUIFont(name: "HelveticaNeue-Light", size: CGFloat(14.0))!
-        
         chartView.xAxis.valueFormatter = XAxisDateFormatter()
     }
 
@@ -80,23 +85,47 @@ class OximeterViewController: NSViewController, NSTableViewDelegate, OximeterDev
         chartView.data = data
         
         chartView.animate(xAxisDuration: 1.0, yAxisDuration: 0.0)
-
-
         chartTitle = "\(report.startDate)-\(report.endDate) Interval:\(report.timingInterval) Mode:\(report.mode)"
     }
     
     //  MARK: - reportTable Delegate
     
     func tableViewSelectionDidChange(_ notification: Notification) {
-        lastIndex = reportTable.selectedRow
-        boardController.getReportData(index: lastIndex)
+        lastSelectedIndex = reportTable.selectedRow
+        boardController.getReportData(reportNumber: lastSelectedIndex+1)
     }
     
     // MARK: - OximeterDeviceController Delegate
     
-    func reportDidComplete(report: OximeterReport) {
+    func didOpenSerialPort(port: ORSSerialPort) {
+        print("didOpenSerialPort")
+        boardController.handshake(unused: 0)
+    }
+    
+    func didFindDevice(port: ORSSerialPort) {
+        print("didFindDevice")
+        boardController.getNumberOfReports(unused: 0)
+    }
+    
+    func didGetNumberOfReports(numberOfReports: Int) {
+        print("number of reports: \(numberOfReports)")
+        self.numberOfReports = numberOfReports
+        boardController.getReportHeader(reportNumber: 1)
+    }
+    
+    func didGetReportHeader(report: OximeterReport) {
+        self.reports.append(report)
+        print("didGetReportHeader: \(report.number)")
+        if report.number < self.numberOfReports {
+            boardController.getReportHeader(reportNumber: report.number+1)
+        }
+    }
+    
+    func didGetReportData(report: OximeterReport) {
+        reports[report.number-1] = report
         chartUpdate(report)
     }
+
 }
 
 class XAxisDateFormatter : IAxisValueFormatter {
