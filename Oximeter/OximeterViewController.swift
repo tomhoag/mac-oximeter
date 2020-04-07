@@ -71,6 +71,12 @@ class OximeterViewController: NSViewController, NSTableViewDelegate, OximeterDev
     
     func chartUpdate(_ report:OximeterReport) {
         
+        guard report.data != "" else {
+            // TODO: pop alert
+            print("report missing data")
+            return
+        }
+        
         let interval = report.timingInterval
         let startDateInterval = report.start.timeIntervalSince1970
         
@@ -146,6 +152,10 @@ class OximeterViewController: NSViewController, NSTableViewDelegate, OximeterDev
     func didGetReportData(report: OximeterReport) {
         reports[report.number-1] = report
         chartUpdate(report)
+    }
+    
+    func couldNotCompleteRequest(message: String?) {
+        print("device could not complete request: \(message!)")
     }
 
 }

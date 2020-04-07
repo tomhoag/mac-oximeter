@@ -34,6 +34,7 @@ import ORSSerial
     @objc optional func didGetNumberOfReports(numberOfReports:Int)
     @objc optional func didGetReportHeader(report:OximeterReport)
     @objc optional func didGetReportData(report:OximeterReport)
+    @objc optional func couldNotCompleteRequest(message:String?)
 }
 
 class OximeterDeviceController: NSObject, ORSSerialPortDelegate {
@@ -69,7 +70,12 @@ class OximeterDeviceController: NSObject, ORSSerialPortDelegate {
                                        timeoutInterval: 0.5,
                                        responseDescriptor: responseDescriptor)
         print("btw, delegate: \(serialPort?.delegate)")
-        serialPort!.send(request)
+        if let port = serialPort {
+            port.send(request)
+        } else {
+            delegate?.couldNotCompleteRequest?(message: "\(#function) serialPort is nil")
+            
+        }
     }
     
     func getNumberOfReports(unused:Int) {
@@ -82,7 +88,12 @@ class OximeterDeviceController: NSObject, ORSSerialPortDelegate {
                                        userInfo: SerialBoardRequestType.getNumberOfReports.rawValue,
                                        timeoutInterval: 0.5,
                                        responseDescriptor: responseDescriptor)
-        serialPort!.send(request)
+        
+        if let port = serialPort {
+            port.send(request)
+        } else {
+            delegate?.couldNotCompleteRequest?(message: "\(#function) serialPort is nil")
+        }
     }
     
     func getReportHeader(reportNumber:Int) {
@@ -99,7 +110,11 @@ class OximeterDeviceController: NSObject, ORSSerialPortDelegate {
                                        timeoutInterval: 0.5,
                                        responseDescriptor: responseDescriptor)
         print("btw, delegate: \(serialPort?.delegate)")
-        serialPort!.send(request)
+        if let port = serialPort {
+            port.send(request)
+        } else {
+            delegate?.couldNotCompleteRequest?(message: "\(#function) serialPort is nil")
+        }
     }
     
     func getReportData(reportNumber:Int) {
@@ -117,7 +132,11 @@ class OximeterDeviceController: NSObject, ORSSerialPortDelegate {
                                        timeoutInterval: 0.5,
                                        responseDescriptor: responseDescriptor)
         
-        serialPort!.send(request)
+        if let port = serialPort {
+            port.send(request)
+        } else {
+            delegate?.couldNotCompleteRequest?(message: "\(#function) serialPort is nil")
+        }
     }
     
     // MARK: - ORSSerialPortDelegate
