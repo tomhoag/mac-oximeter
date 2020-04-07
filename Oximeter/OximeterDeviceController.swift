@@ -29,8 +29,7 @@ import ORSSerial
 
 @objc protocol OximeterDeviceDelegate {
     
-    @objc optional func didOpenSerialPort(port:ORSSerialPort)
-    @objc optional func didFindDevice(port:ORSSerialPort)
+    @objc optional func didConnect(port:ORSSerialPort?, success:Bool)
     @objc optional func didGetNumberOfReports(numberOfReports:Int)
     @objc optional func didGetReportHeader(report:OximeterReport)
     @objc optional func didGetReportData(report:OximeterReport)
@@ -44,10 +43,15 @@ class OximeterDeviceController: NSObject, ORSSerialPortDelegate {
     @objc dynamic var reports = [OximeterReport]()
     
     enum SerialBoardRequestType: Int {
-        case handshake = 1
+        case open = 1
+        case handshake
         case getNumberOfReports
         case getReportHeader
         case getReportData
+    }
+    
+    struct WaitTimerInfo {
+        var requestType:SerialBoardRequestType?
     }
     
     fileprivate var nextCommandFunction: ((Int) -> Void)!
@@ -57,9 +61,18 @@ class OximeterDeviceController: NSObject, ORSSerialPortDelegate {
     fileprivate let requestSuffix = "55AA0100"
     
     
+    func connect(using port:ORSSerialPort) {
+        serialPort = port // calls didOpenSerialPort on success
+        
+        // set a timer.  If the timer expires before didOpenSerialPort is called, no beuno for serialPort
+        var userInfo = WaitTimerInfo()
+        userInfo.requestType = SerialBoardRequestType.open
+        waitTimer = Timer.scheduledTimer(timeInterval: 2.0, target: self, selector: #selector(self.waitTimerFired(_:)), userInfo: userInfo, repeats: false)
+    }
+    
     // MARK: Sending Commands
-   func handshake(unused:Int) {
-        print("sending handshake");
+    func handshake() {
+        ///print("sending handshake");
         let command = Data(hexString:"55AA01")!
         let prefix:Data? = nil
         let suffix = Data(hexString:requestSuffix)!
@@ -69,16 +82,15 @@ class OximeterDeviceController: NSObject, ORSSerialPortDelegate {
                                        userInfo: SerialBoardRequestType.handshake.rawValue,
                                        timeoutInterval: 0.5,
                                        responseDescriptor: responseDescriptor)
-        print("btw, delegate: \(serialPort?.delegate)")
+        
         if let port = serialPort {
             port.send(request)
         } else {
             delegate?.couldNotCompleteRequest?(message: "\(#function) serialPort is nil")
-            
         }
     }
     
-    func getNumberOfReports(unused:Int) {
+    func getNumberOfReports() {
         let opcode = "55AA02"
         let command = Data(hexString:opcode)!
         let prefix = Data(hexString:opcode)!
@@ -100,8 +112,8 @@ class OximeterDeviceController: NSObject, ORSSerialPortDelegate {
         fetchingReportNumber = reportNumber
         let opcode = "55AA03"
         let command = Data(hexString: String(format:"\(opcode)%04X", reportNumber))! // 55 AA 03 00 01
-        print("sending: \(command.hexDescription) (from getReportHeader \(reportNumber))")
-
+        //print("sending: \(command.hexDescription) (from getReportHeader \(reportNumber))")
+        
         let prefix = Data(hexString:opcode)!
         let suffix = Data(hexString:requestSuffix)!
         let responseDescriptor = ORSSerialPacketDescriptor(prefix: prefix, suffix: suffix, maximumPacketLength: 20, userInfo: nil)
@@ -109,7 +121,7 @@ class OximeterDeviceController: NSObject, ORSSerialPortDelegate {
                                        userInfo: SerialBoardRequestType.getReportHeader.rawValue,
                                        timeoutInterval: 0.5,
                                        responseDescriptor: responseDescriptor)
-        print("btw, delegate: \(serialPort?.delegate)")
+        
         if let port = serialPort {
             port.send(request)
         } else {
@@ -143,22 +155,24 @@ class OximeterDeviceController: NSObject, ORSSerialPortDelegate {
     
     func serialPortWasRemovedFromSystem(_ serialPort: ORSSerialPort) {
         self.serialPort = nil
-        print("removed")
     }
     
     func serialPort(_ serialPort: ORSSerialPort, didEncounterError error: Error) {
         print("Serial port \(serialPort) encountered an error: \(error)")
-        print("btw, delegate: \(serialPort.delegate)")
     }
     
     func serialPort(_ serialPort: ORSSerialPort, didReceiveResponse responseData: Data, to request: ORSSerialRequest) {
         
         let requestType = SerialBoardRequestType(rawValue: request.userInfo as! Int)!
         switch requestType {
+        case .open:
+            delegate?.didConnect?(port: serialPort, success: true)
+            break
         case .handshake:
-            print("handshake response: \(responseData.hexDescription)")
+            //print("handshake response: \(responseData.hexDescription)")
 
-            delegate?.didFindDevice?(port: serialPort)
+            waitTimer?.invalidate()
+            delegate?.didConnect?(port: serialPort, success: true)
             
         case .getNumberOfReports:
             //print("numberOfReports: \(responseData.hexDescription) \(responseData[3...4].hexDescription)")
@@ -192,7 +206,7 @@ class OximeterDeviceController: NSObject, ORSSerialPortDelegate {
     }
     
     func serialPortWasOpened(_ serialPort: ORSSerialPort) {
-        delegate?.didOpenSerialPort?(port:serialPort)
+        handshake()
     }
     
     func serialPortWasClosed(_ serialPort: ORSSerialPort) { }
@@ -217,5 +231,28 @@ class OximeterDeviceController: NSObject, ORSSerialPortDelegate {
             }
         }
     }
+    
+    // MARK: - The Waiting Timer
+    
+    @objc func waitTimerFired(_ timer: Timer) {
+        //print("waitTimerFired: \(timer.userInfo as! WaitTimerInfo)")
+        switch (timer.userInfo as! WaitTimerInfo).requestType {
+        case .open:
+            delegate?.didConnect?(port: serialPort!, success: false)
+        default:
+            break
+        }
+        
+    }
+    
+    fileprivate var waitTimer: Timer? {
+        willSet {
+            if let timer = waitTimer {
+                timer.invalidate()
+            }
+        }
+    }
 
 }
+
+

@@ -13,26 +13,42 @@ import Charts
 
 class OximeterViewController: NSViewController, NSTableViewDelegate, OximeterDeviceDelegate {
     
-    @IBOutlet weak var reportTable: NSTableView!
+    // MARK: - Bound Items
 
-    @IBOutlet weak var chartView: LineChartView!
-    
     @objc dynamic let serialPortManager = ORSSerialPortManager.shared()
     @objc dynamic let oximeter:OximeterDeviceController = OximeterDeviceController()
-    
-    @objc dynamic var chartTitle = ""
-
-    @IBAction func connect(_ sender: Any) {
-        let port = ORSSerialPort(path: "/dev/tty.usbserial")
-        oximeter.serialPort = port
-    }
-    
-    fileprivate var numberOfReports = 0
     @objc dynamic var reports = [OximeterReport]()
-
-    @IBOutlet weak var tableView: NSTableView!
+    @objc dynamic var chartTitle = ""
+    
+    // MARK: - vars
     
     var lastSelectedIndex = 0
+    fileprivate var numberOfReports = 0
+    
+    // MARK: - Outlets & Actions
+    @IBOutlet weak var tableView: NSTableView!
+    @IBOutlet weak var reportTable: NSTableView!
+    @IBOutlet weak var chartView: LineChartView!
+    
+    fileprivate var connectTries = 0
+    fileprivate let maxConnectTries = 5
+    
+    @IBAction func connect(_ sender: Any) {
+        
+        guard ORSSerialPortManager.shared().availablePorts.count > 0 else {
+            // TODO: pop up alerts?
+            print("No Availble Devices")
+            return
+        }
+        
+        reports = [OximeterReport]()
+        
+        connectTries = 0
+        // leverage the delegate response to bootstrap the search and connect
+        didConnect(port: nil, success: false)
+    }
+    
+    // MARK: - ViewController
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -68,6 +84,8 @@ class OximeterViewController: NSViewController, NSTableViewDelegate, OximeterDev
         // Update the view, if already loaded.
         }
     }
+    
+    // MARK: - Charts
     
     func chartUpdate(_ report:OximeterReport) {
         
@@ -125,14 +143,36 @@ class OximeterViewController: NSViewController, NSTableViewDelegate, OximeterDev
     
     // MARK: - OximeterDeviceController Delegate
     
-    func didOpenSerialPort(port: ORSSerialPort) {
-        print("didOpenSerialPort")
-        oximeter.handshake(unused: 0)
-    }
-    
-    func didFindDevice(port: ORSSerialPort) {
-        print("didFindDevice")
-        oximeter.getNumberOfReports(unused: 0)
+    func didConnect(port:ORSSerialPort?, success:Bool) {
+        
+        let availablePorts = ORSSerialPortManager.shared().availablePorts
+        if success {
+            print("yay! \(port) ready to go yo")
+            oximeter.getNumberOfReports()
+        } else {
+            print("sad trombone :( \(port) couldn't be opened")
+            // get the next available port and try again
+            var matchThis = ""
+            if let port = port {
+                matchThis = port.name
+            }
+            if let index = availablePorts.firstIndex(where: {$0.name == matchThis}) {
+                if(index+1 < availablePorts.count) {
+                    let nextPort = availablePorts[index+1]
+                    oximeter.connect(using: nextPort)
+                } else {
+                    print("tried them all, no beuno!! \(connectTries)")
+                    connectTries = connectTries + 1
+                    if(connectTries < maxConnectTries) {
+                        didConnect(port: nil, success: false)
+                    } else {
+                        print("tried to connect \(maxConnectTries) times -- no beuno")
+                    }
+                }
+            } else {
+                oximeter.connect(using: availablePorts[0])
+            }
+        }
     }
     
     func didGetNumberOfReports(numberOfReports: Int) {
@@ -157,8 +197,9 @@ class OximeterViewController: NSViewController, NSTableViewDelegate, OximeterDev
     func couldNotCompleteRequest(message: String?) {
         print("device could not complete request: \(message!)")
     }
-
 }
+
+// MARK: - Helper Classes
 
 class XAxisDateFormatter : IAxisValueFormatter {
     
