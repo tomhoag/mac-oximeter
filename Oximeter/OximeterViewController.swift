@@ -43,6 +43,13 @@ class OximeterViewController: NSViewController, NSTableViewDelegate, OximeterDev
         chartView.backgroundColor = NSUIColor.white
         chartView.legend.font = NSUIFont(name: "HelveticaNeue-Light", size: CGFloat(14.0))!
         chartView.xAxis.valueFormatter = XAxisDateFormatter()
+        
+        var dummy = OximeterReport()
+        dummy.header = "200328205541012200B4"
+        reports.append(dummy)
+        dummy = OximeterReport()
+        dummy.header = "20032720280201220078"
+        reports.append(dummy)
     }
 
     override var representedObject: Any? {
