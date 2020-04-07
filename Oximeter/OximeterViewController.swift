@@ -10,8 +10,17 @@ import Cocoa
 import ORSSerial
 import Charts
 
-class OximeterViewController: NSViewController, NSTableViewDelegate, OximeterDeviceDelegate {
-
+class OximeterViewController: NSViewController, NSTableViewDelegate, OximeterDeviceDelegate, DeviceFinderDelegate {
+    
+    func deviceFound(port: ORSSerialPort) {
+        print("found device \(port)")
+        
+        boardController.serialPort = port
+    }
+    
+    func noDeviceFound() {
+        print("sad trombone")
+    }
     
 
     @IBOutlet weak var reportTable: NSTableView!
@@ -24,9 +33,13 @@ class OximeterViewController: NSViewController, NSTableViewDelegate, OximeterDev
     @objc dynamic var chartTitle = ""
 
     
-//    @objc dynamic var selectionIndexes = IndexSet()
+    @IBAction func connect(_ sender: Any) {
+        let finder = DeviceFinder()
+        finder.finderDelegate = self
+        finder.findOximeterDevice()
+    }
     
-    var lastIndex = 0
+    var lastSelectedIndex = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -90,8 +103,8 @@ class OximeterViewController: NSViewController, NSTableViewDelegate, OximeterDev
     //  MARK: - reportTable Delegate
     
     func tableViewSelectionDidChange(_ notification: Notification) {
-        lastIndex = reportTable.selectedRow
-        boardController.getReportData(index: lastIndex)
+        lastSelectedIndex = reportTable.selectedRow
+        boardController.getReportData(index: lastSelectedIndex)
     }
     
     // MARK: - OximeterDeviceController Delegate

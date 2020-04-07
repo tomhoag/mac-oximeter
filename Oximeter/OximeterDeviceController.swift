@@ -27,9 +27,6 @@
 import Cocoa
 import ORSSerial
 
-let kTimeoutDuration = 0.5
-
-
 protocol OximeterDeviceDelegate {
     
     func reportDidComplete(report:OximeterReport)
@@ -189,7 +186,6 @@ class OximeterDeviceController: NSObject, ORSSerialPortDelegate {
         
         self.pollingTimer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(OximeterDeviceController.pollingTimerFired(_:)), userInfo: nil, repeats: true)
         self.pollingTimer!.fire()
-        
     }
     
     func serialPortWasClosed(_ serialPort: ORSSerialPort) {
@@ -198,7 +194,7 @@ class OximeterDeviceController: NSObject, ORSSerialPortDelegate {
     
     // MARK: - Properties
     
-    @objc fileprivate(set) internal var serialPort: ORSSerialPort? {
+    @objc internal var serialPort: ORSSerialPort? {
         willSet {
             if let port = serialPort {
                 port.close()
@@ -206,32 +202,19 @@ class OximeterDeviceController: NSObject, ORSSerialPortDelegate {
             }
         }
         didSet {
+            print("new port \(serialPort)")
             if let port = serialPort {
                 port.baudRate = 38400
                 port.parity = .none
                 port.numberOfStopBits = 1
                 port.delegate = self
-//                port.rts = true
-                port.open()
+                nextCommandFunction = getNumberOfReports
+                self.pollingTimer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(OximeterDeviceController.pollingTimerFired(_:)), userInfo: nil, repeats: true)
+//                port.open()
             }
         }
     }
     
-//    @objc dynamic fileprivate(set) internal var temperature: Int = 0
-//
-//    @objc dynamic fileprivate var internalLEDOn = false
-//
-//    class func keyPathsForValuesAffectingLEDOn() -> NSSet { return NSSet(object: "internalLEDOn") }
-//    @objc dynamic var LEDOn: Bool {
-//        get {
-//            return internalLEDOn
-//        }
-//        set(newValue) {
-//            internalLEDOn = newValue
-//            sendCommandToSetLEDToState(newValue)
-//        }
-//    }
-//
     fileprivate var pollingTimer: Timer? {
         willSet {
             if let timer = pollingTimer {
