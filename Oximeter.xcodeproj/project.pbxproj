@@ -15,7 +15,6 @@
 		AB9693FA2437F54800015CF9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AB9693F82437F54800015CF9 /* Main.storyboard */; };
 		AB9694032437FB1E00015CF9 /* OximeterDeviceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB9694022437FB1E00015CF9 /* OximeterDeviceController.swift */; };
 		ABB6AD47243BCB85005D4094 /* CollectionExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABB6AD44243BCB84005D4094 /* CollectionExtension.swift */; };
-		ABB6AD48243BCB85005D4094 /* OximeterReport.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABB6AD45243BCB85005D4094 /* OximeterReport.swift */; };
 		ABB6AD49243BCB85005D4094 /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABB6AD46243BCB85005D4094 /* StringExtension.swift */; };
 		ABE90673243D0FBC00D63DCA /* NSMutableAttributedStringExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABE90672243D0FBC00D63DCA /* NSMutableAttributedStringExtensions.swift */; };
 		ABE9067E243E1C5E00D63DCA /* Report+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABE9067C243E1C5E00D63DCA /* Report+CoreDataClass.swift */; };
@@ -35,7 +34,6 @@
 		AB9693FC2437F54800015CF9 /* Oximeter.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Oximeter.entitlements; sourceTree = "<group>"; };
 		AB9694022437FB1E00015CF9 /* OximeterDeviceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OximeterDeviceController.swift; sourceTree = "<group>"; };
 		ABB6AD44243BCB84005D4094 /* CollectionExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionExtension.swift; sourceTree = "<group>"; };
-		ABB6AD45243BCB85005D4094 /* OximeterReport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OximeterReport.swift; sourceTree = "<group>"; };
 		ABB6AD46243BCB85005D4094 /* StringExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
 		ABE90672243D0FBC00D63DCA /* NSMutableAttributedStringExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSMutableAttributedStringExtensions.swift; sourceTree = "<group>"; };
 		ABE9067C243E1C5E00D63DCA /* Report+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Report+CoreDataClass.swift"; sourceTree = SOURCE_ROOT; };
@@ -91,7 +89,6 @@
 				AB9693EF2437F54600015CF9 /* AppDelegate.swift */,
 				AB9693F12437F54600015CF9 /* OximeterViewController.swift */,
 				AB9694022437FB1E00015CF9 /* OximeterDeviceController.swift */,
-				ABB6AD45243BCB85005D4094 /* OximeterReport.swift */,
 				AB9693F82437F54800015CF9 /* Main.storyboard */,
 				AB9693F62437F54800015CF9 /* Assets.xcassets */,
 				AB9693FB2437F54800015CF9 /* Info.plist */,
@@ -245,7 +242,6 @@
 				ABE9067F243E1C5E00D63DCA /* Report+CoreDataProperties.swift in Sources */,
 				ABB6AD49243BCB85005D4094 /* StringExtension.swift in Sources */,
 				AB1143E024382FCA00E83CCB /* DataExtension.swift in Sources */,
-				ABB6AD48243BCB85005D4094 /* OximeterReport.swift in Sources */,
 				ABB6AD47243BCB85005D4094 /* CollectionExtension.swift in Sources */,
 				ABE9067E243E1C5E00D63DCA /* Report+CoreDataClass.swift in Sources */,
 			);

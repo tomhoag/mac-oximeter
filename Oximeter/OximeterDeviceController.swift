@@ -31,16 +31,45 @@ import ORSSerial
     
     @objc optional func didConnect(port:ORSSerialPort?, success:Bool)
     @objc optional func didGetNumberOfReports(numberOfReports:Int)
-    @objc optional func didGetReportHeader(report:OximeterReport)
-    @objc optional func didGetReportData(report:OximeterReport)
+    @objc optional func didGetReport(header:String, for reportNumber:Int)
+    @objc optional func didGetReport(data:String, for reportNumber:Int, userInfo:Any?)
     @objc optional func couldNotCompleteRequest(message:String?)
 }
 
+// MARK: -
+
 class OximeterDeviceController: NSObject, ORSSerialPortDelegate {
     
-    var delegate: OximeterDeviceDelegate?
+    // MARK: Properties
+       
+    @objc internal var serialPort: ORSSerialPort? {
+        willSet {
+            if let port = serialPort {
+                port.close()
+                port.delegate = nil
+            }
+        }
+        didSet {
+            if let port = serialPort {
+                port.baudRate = 38400
+                port.parity = .none
+                port.numberOfStopBits = 1
+                port.delegate = self
+                port.rts = true
+                port.open()
+            }
+        }
+    }
+    
+    fileprivate var waitTimer: Timer? {
+        willSet {
+            if let timer = waitTimer {
+                timer.invalidate()
+            }
+        }
+    }
 
-    @objc dynamic var reports = [OximeterReport]()
+    weak var delegate: OximeterDeviceDelegate?
     
     enum SerialBoardRequestType: Int {
         case open = 1
@@ -50,36 +79,40 @@ class OximeterDeviceController: NSObject, ORSSerialPortDelegate {
         case getReportData
     }
     
+    struct SerialBoardRequest {
+        var type:SerialBoardRequestType!
+        var userInfo:Any?
+        var reportNumber:Int?
+    }
+    
     struct WaitTimerInfo {
         var requestType:SerialBoardRequestType?
     }
-    
-    fileprivate var nextCommandFunction: ((Int) -> Void)!
-    fileprivate var fetchingReportNumber:Int = 0
-    fileprivate var numberOfReports:UInt16 = 0
-    
+        
     fileprivate let requestSuffix = "55AA0100"
     
+    // MARK: - Connecting
     
     func connect(using port:ORSSerialPort) {
-        serialPort = port // calls didOpenSerialPort on success
+        serialPort = port // calls delegate.didConnect on success of open and handshake
         
-        // set a timer.  If the timer expires before didOpenSerialPort is called, no beuno for serialPort
+        /// set a timer.  If the timer expires before didOpenSerialPort is called, no beuno for serialPort
         var userInfo = WaitTimerInfo()
         userInfo.requestType = SerialBoardRequestType.open
-        waitTimer = Timer.scheduledTimer(timeInterval: 2.0, target: self, selector: #selector(self.waitTimerFired(_:)), userInfo: userInfo, repeats: false)
+        waitTimer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.waitTimerFired(_:)), userInfo: userInfo, repeats: false)
     }
-    
-    // MARK: Sending Commands
-    func handshake() {
+        
+    fileprivate func handshake() {
         ///print("sending handshake");
         let command = Data(hexString:"55AA01")!
         let prefix:Data? = nil
         let suffix = Data(hexString:requestSuffix)!
         
         let responseDescriptor =  ORSSerialPacketDescriptor(prefix: prefix, suffix: suffix, maximumPacketLength: 10, userInfo: nil)
+        var requestInfo = SerialBoardRequest()
+        requestInfo.type = SerialBoardRequestType.handshake
         let request = ORSSerialRequest(dataToSend: command,
-                                       userInfo: SerialBoardRequestType.handshake.rawValue,
+                                       userInfo: requestInfo,
                                        timeoutInterval: 0.5,
                                        responseDescriptor: responseDescriptor)
         
@@ -90,14 +123,18 @@ class OximeterDeviceController: NSObject, ORSSerialPortDelegate {
         }
     }
     
+    // MARK: - Sending Commands
+
     func getNumberOfReports() {
         let opcode = "55AA02"
         let command = Data(hexString:opcode)!
         let prefix = Data(hexString:opcode)!
         let suffix = Data(hexString:requestSuffix)!
         let responseDescriptor =  ORSSerialPacketDescriptor(prefix: prefix, suffix: suffix, maximumPacketLength: 10, userInfo: nil)
+        var requestInfo = SerialBoardRequest()
+        requestInfo.type = SerialBoardRequestType.getNumberOfReports
         let request = ORSSerialRequest(dataToSend: command,
-                                       userInfo: SerialBoardRequestType.getNumberOfReports.rawValue,
+                                       userInfo: requestInfo,
                                        timeoutInterval: 0.5,
                                        responseDescriptor: responseDescriptor)
         
@@ -109,7 +146,7 @@ class OximeterDeviceController: NSObject, ORSSerialPortDelegate {
     }
     
     func getReportHeader(reportNumber:Int) {
-        fetchingReportNumber = reportNumber
+
         let opcode = "55AA03"
         let command = Data(hexString: String(format:"\(opcode)%04X", reportNumber))! // 55 AA 03 00 01
         //print("sending: \(command.hexDescription) (from getReportHeader \(reportNumber))")
@@ -117,8 +154,11 @@ class OximeterDeviceController: NSObject, ORSSerialPortDelegate {
         let prefix = Data(hexString:opcode)!
         let suffix = Data(hexString:requestSuffix)!
         let responseDescriptor = ORSSerialPacketDescriptor(prefix: prefix, suffix: suffix, maximumPacketLength: 20, userInfo: nil)
+        var requestInfo = SerialBoardRequest()
+        requestInfo.type = SerialBoardRequestType.getReportHeader
+        requestInfo.reportNumber = reportNumber
         let request = ORSSerialRequest(dataToSend: command,
-                                       userInfo: SerialBoardRequestType.getReportHeader.rawValue,
+                                       userInfo: requestInfo,
                                        timeoutInterval: 0.5,
                                        responseDescriptor: responseDescriptor)
         
@@ -129,18 +169,21 @@ class OximeterDeviceController: NSObject, ORSSerialPortDelegate {
         }
     }
     
-    func getReportData(reportNumber:Int) {
-        
-        fetchingReportNumber = reportNumber
-        
+    func getReportData(reportNumber:Int, userInfo:Any) {
+                
         let opcode = "55AA04"
         let command = Data(hexString: String(format:"\(opcode)%04X", reportNumber))! // add 1 as device stores reports starting @ 1
         let prefix = Data(hexString:opcode)!
         let suffix = Data(hexString:requestSuffix)!
         
         let responseDescriptor = ORSSerialPacketDescriptor(prefix: prefix, suffix: suffix, maximumPacketLength: 4096, userInfo: nil)
+        var requestInfo = SerialBoardRequest()
+        requestInfo.type = SerialBoardRequestType.getReportData
+        requestInfo.userInfo = userInfo
+        requestInfo.reportNumber = reportNumber
+        
         let request = ORSSerialRequest(dataToSend: command,
-                                       userInfo: SerialBoardRequestType.getReportData.rawValue,
+                                       userInfo: requestInfo,
                                        timeoutInterval: 0.5,
                                        responseDescriptor: responseDescriptor)
         
@@ -163,22 +206,19 @@ class OximeterDeviceController: NSObject, ORSSerialPortDelegate {
     
     func serialPort(_ serialPort: ORSSerialPort, didReceiveResponse responseData: Data, to request: ORSSerialRequest) {
         
-        let requestType = SerialBoardRequestType(rawValue: request.userInfo as! Int)!
+        let requestInfo = request.userInfo as! SerialBoardRequest
+
+        let requestType = SerialBoardRequestType(rawValue:requestInfo.type.rawValue)!
         switch requestType {
         case .open:
             delegate?.didConnect?(port: serialPort, success: true)
-            break
         case .handshake:
-            //print("handshake response: \(responseData.hexDescription)")
-
+            // Invalidate the timer and let the delegate know the device is good to go
             waitTimer?.invalidate()
             delegate?.didConnect?(port: serialPort, success: true)
             
         case .getNumberOfReports:
-            //print("numberOfReports: \(responseData.hexDescription) \(responseData[3...4].hexDescription)")
-            
-            numberOfReports = UInt16(bigEndian: responseData.subdata(in: 3..<5).withUnsafeBytes { $0.pointee })
-            
+            let numberOfReports = UInt16(bigEndian: responseData.subdata(in: 3..<5).withUnsafeBytes { $0.load(as: UInt16.self) })
             delegate?.didGetNumberOfReports?(numberOfReports: Int(numberOfReports))
             
         case .getReportHeader:
@@ -186,51 +226,32 @@ class OximeterDeviceController: NSObject, ORSSerialPortDelegate {
             // response: 55 AA 03 YY MM DD HH MM SS RR MO 00 B4 55 AA 01
             var header = responseData.subdata(in:0..<13)
             header = header.subdata(in:3..<13)
-
-            let report = OximeterReport()
-            report.number = fetchingReportNumber
-            report.header = header.hexDescription
-            reports.append(report)
             
-            delegate?.didGetReportHeader?(report: report)
+            delegate?.didGetReport?(header: header.hexDescription, for:requestInfo.reportNumber!)
             
         case .getReportData:
 
             let length = responseData.count - 3
             var data = responseData.subdata(in:0..<length)
             data = responseData.subdata(in:3..<length)
-            reports[fetchingReportNumber-1].data = data.hexDescription
             
-            delegate?.didGetReportData?(report: reports[fetchingReportNumber-1])
+            delegate?.didGetReport?(data: data.hexDescription, for: requestInfo.reportNumber!, userInfo:requestInfo.userInfo as Any)
         }
     }
     
     func serialPortWasOpened(_ serialPort: ORSSerialPort) {
+        // change the timer userInfo
+        waitTimer?.invalidate()
+        var userInfo = WaitTimerInfo()
+        userInfo.requestType = SerialBoardRequestType.handshake
+        waitTimer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.waitTimerFired(_:)), userInfo: userInfo, repeats: false)
+        
         handshake()
     }
     
     func serialPortWasClosed(_ serialPort: ORSSerialPort) { }
     
-    // MARK: - Properties
-    
-    @objc internal var serialPort: ORSSerialPort? {
-        willSet {
-            if let port = serialPort {
-                port.close()
-                port.delegate = nil
-            }
-        }
-        didSet {
-            if let port = serialPort {
-                port.baudRate = 38400
-                port.parity = .none
-                port.numberOfStopBits = 1
-                port.delegate = self
-                port.rts = true
-                port.open()
-            }
-        }
-    }
+   
     
     // MARK: - The Waiting Timer
     
@@ -239,20 +260,12 @@ class OximeterDeviceController: NSObject, ORSSerialPortDelegate {
         switch (timer.userInfo as! WaitTimerInfo).requestType {
         case .open:
             delegate?.didConnect?(port: serialPort!, success: false)
+        case .handshake:
+            delegate?.didConnect?(port: serialPort!, success:false)
         default:
             break
         }
-        
     }
-    
-    fileprivate var waitTimer: Timer? {
-        willSet {
-            if let timer = waitTimer {
-                timer.invalidate()
-            }
-        }
-    }
-
 }
 
 

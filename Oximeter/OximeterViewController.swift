@@ -25,17 +25,17 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate {
     @objc dynamic var managedContext: NSManagedObjectContext!
 
     // MARK: - vars
-    
+    /// number of reports available on the device
     fileprivate var numberOfReports = 0
+    /// number of times have iterated through available serial ports attempting to connect to the oximeter
+    fileprivate var connectTries = 0
+    /// maximum number of times to attempt to find and connect to the oximeter
+    fileprivate let maxConnectTries = 5
     
     // MARK: - Outlets & Actions
     @IBOutlet var reportArrayController: NSArrayController!
-    @IBOutlet weak var tableView: NSTableView!
     @IBOutlet weak var reportTable: NSTableView!
     @IBOutlet weak var chartView: LineChartView!
-    
-    fileprivate var connectTries = 0
-    fileprivate let maxConnectTries = 5
     
     @IBAction func connect(_ sender: Any) {
         
@@ -75,7 +75,7 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate {
         chartView.legend.font = NSUIFont(name: "HelveticaNeue-Light", size: CGFloat(14.0))!
         chartView.xAxis.valueFormatter = XAxisDateFormatter()
                 
-        tableView.tableColumns.forEach { (column) in // why can't this be done in the storyboard??
+        reportTable.tableColumns.forEach { (column) in // why can't this be done in the storyboard??
             let exAttr = NSMutableAttributedString(attributedString: column.headerCell.attributedStringValue)
             exAttr.replaceFont(with: NSFont.systemFont(ofSize: 16))
             
@@ -84,15 +84,15 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate {
             column.headerCell = oxc
         }
         
-        var dummy = OximeterReport()
-        dummy.header = "200328205541012200B4"
-        saveReport(oxreport: dummy)
-        dummy.data = "5e00385e00375e00375e00375e00375e00375e00375e00385e00385e00395e00395e00395f003a5f003a5f003a5f00395e00385e00375f00375f00365f00365f00375f00375f00385f00385f00385f00395e00395f00395f00395f00395f00385f00375f00375f00375f00375f00385f00395f00395f00385f00385f00395f00395f00385f00385f00375f00375f00375f00375f00375f00385f00395f00395f00395f00395f00395f00385f00385f00385f00385f00385f00385f00385f00375f00375f00375f00375f00375f00385f00395e00395e00395e00395d00385d00385d00385e00385e00395e00395f00395f003a5f003a5f003a"
-        saveReport(oxreport: dummy)
-        
-        dummy = OximeterReport()
-        dummy.header = "20032720280201420078"
-        saveReport(oxreport: dummy)
+//        var dummy = OximeterReport()
+//        dummy.header = "200328205541012200B4"
+//        saveReport(oxreport: dummy)
+//        dummy.data = "5e00385e00375e00375e00375e00375e00375e00375e00385e00385e00395e00395e00395f003a5f003a5f003a5f00395e00385e00375f00375f00365f00365f00375f00375f00385f00385f00385f00395e00395f00395f00395f00395f00385f00375f00375f00375f00375f00385f00395f00395f00385f00385f00395f00395f00385f00385f00375f00375f00375f00375f00375f00385f00395f00395f00395f00395f00395f00385f00385f00385f00385f00385f00385f00385f00375f00375f00375f00375f00375f00385f00395e00395e00395e00395d00385d00385d00385e00385e00395e00395f00395f003a5f003a5f003a"
+//        saveReport(oxreport: dummy)
+//
+//        dummy = OximeterReport()
+//        dummy.header = "20032720280201420078"
+//        saveReport(oxreport: dummy)
     }
 
     override var representedObject: Any? {
@@ -146,10 +146,11 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate {
         chartTitle = "\(report.startDate) - \(report.endDate) Interval:\(report.timingInterval) Mode:\(report.mode)"
     }
     
-
-    // Select Table View > Bindings inspector > Selection Indexes > Bind to the Array Controller
-    // Set Controller Key to selectionIndexes
-    // To observe the selected objects, set up observation in viewDidLoad
+    /**
+     Select Table View > Bindings inspector > Selection Indexes > Bind to the Array Controller
+     Set Controller Key to selectionIndexes
+     To observe the selected objects, set up observation in viewDidLoad
+     */
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         guard let keyPath = keyPath else { return }
         switch keyPath {
@@ -179,11 +180,9 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate {
         
         let availablePorts = ORSSerialPortManager.shared().availablePorts
         if success {
-            print("yay! \(port) ready to go yo")
             connecting = false
             oximeter.getNumberOfReports()
         } else {
-            print("sad trombone :( \(port) couldn't be opened")
             // get the next available port and try again
             var matchThis = ""
             if let port = port {
@@ -210,25 +209,31 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate {
     }
     
     func didGetNumberOfReports(numberOfReports: Int) {
-        print("number of reports: \(numberOfReports)")
+        //print("number of reports: \(numberOfReports)")
         self.numberOfReports = numberOfReports
-        oximeter.getReportHeader(reportNumber: 1)
-    }
-    
-    func didGetReportHeader(report: OximeterReport) {
-        
-//        saveReport(oxreport: report)
-        oximeter.getReportData(reportNumber: report.number)
-        
-        print("didGetReportHeader: \(report.number)")
-        if report.number < self.numberOfReports {
-            oximeter.getReportHeader(reportNumber: report.number+1)
+        if numberOfReports > 0 {
+            oximeter.getReportHeader(reportNumber: 1)
         }
     }
     
-    func didGetReportData(report: OximeterReport) {
-        saveReport(oxreport: report)
-//        chartUpdate(report)
+    func didGetReport(header: String, for reportNumber:Int) {
+        //print("didGetReportData \(reportNumber)")
+        let entity = NSEntityDescription.entity(forEntityName: "Report", in: managedContext)!
+        let report = NSManagedObject(entity: entity, insertInto: managedContext) as? Report
+        report!.setValue(header, forKeyPath: "header")
+        oximeter.getReportData(reportNumber: reportNumber, userInfo:report!) // 1-based
+    }
+    
+    func didGetReport(data: String, for reportNumber: Int, userInfo:Any?) {
+        
+        //print("didGetReportData \(reportNumber)")
+        let report = userInfo as! Report
+        report.setValue(data, forKeyPath: "data")
+        saveReport(report)
+        
+        if(reportNumber + 1 <= self.numberOfReports) {
+            oximeter.getReportHeader(reportNumber: reportNumber+1)
+        }
     }
     
     func couldNotCompleteRequest(message: String?) {
@@ -236,27 +241,20 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate {
     }
     
     // MARK: - Core Data
-    func saveReport(oxreport: OximeterReport) {
+    
+    func saveReport(_ report:Report) {
         
-        let entity = NSEntityDescription.entity(forEntityName: "Report", in: managedContext)!
-        
-        let report = NSManagedObject(entity: entity, insertInto: managedContext)
         managedContext.mergePolicy =  NSMergeByPropertyObjectTrumpMergePolicy
-        
-        report.setValue(oxreport.header, forKeyPath: "header")
-        if let data = oxreport.data {
-            report.setValue(data, forKeyPath: "data")
-        }
-        
         do {
             try managedContext.save()
-
+            
         } catch let error as NSError {
             print(">>>> Could not save. \(error), \(error.userInfo) \(error.localizedDescription)")
         }
         
-        print("saved \(oxreport.header)")
+        print("saved \(report.header)")
     }
+    
 }
 
 // MARK: - Helper Classes
