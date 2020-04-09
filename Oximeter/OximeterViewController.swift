@@ -40,8 +40,13 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate {
     @IBAction func connect(_ sender: Any) {
         
         guard ORSSerialPortManager.shared().availablePorts.count > 0 else {
-            // TODO: pop up alerts?
-            print("No Availble Devices")
+            
+            let alert = NSAlert.init()
+            alert.messageText = "No Serial Ports"
+            alert.informativeText = "There are no serial ports to connect to."
+            alert.alertStyle = .informational
+            alert.addButton(withTitle: "OK")
+            alert.runModal()
             return
         }
                 
@@ -55,7 +60,6 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate {
     
     required init?(coder: NSCoder) {
         super.init(coder:coder)
-        print("init(coder: )")
         guard let appDelegate = NSApplication.shared.delegate as? AppDelegate else {
           return
         }
@@ -107,7 +111,12 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate {
         
         guard report.data != "" else {
             // TODO: pop alert
-            print("report missing data")
+            let alert = NSAlert.init()
+            alert.messageText = "Report has no data"
+            alert.informativeText = "The selected report has no data."
+            alert.alertStyle = .warning
+            alert.addButton(withTitle: "OK")
+            alert.runModal()
             return
         }
         
@@ -193,12 +202,20 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate {
                     let nextPort = availablePorts[index+1]
                     oximeter.connect(using: nextPort)
                 } else {
-                    print("tried them all, no beuno!! \(connectTries)")
+                    //print("tried them all, no beuno!! \(connectTries)")
                     connectTries = connectTries + 1
                     if(connectTries < maxConnectTries) {
                         didConnect(port: nil, success: false)
                     } else {
-                        print("tried to connect \(maxConnectTries) times -- no beuno")
+                        //print("tried to connect \(maxConnectTries) times -- no beuno")
+                        
+                        let alert = NSAlert.init()
+                        alert.messageText = "Could Not Connect"
+                        alert.informativeText = "An Oximeter could not be found.\n\nPlease check the connections and turn it on."
+                        alert.alertStyle = .informational
+                        alert.addButton(withTitle: "OK")
+                        alert.runModal()
+                        
                         connecting = false
                     }
                 }
@@ -209,7 +226,6 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate {
     }
     
     func didGetNumberOfReports(numberOfReports: Int) {
-        //print("number of reports: \(numberOfReports)")
         self.numberOfReports = numberOfReports
         if numberOfReports > 0 {
             oximeter.getReportHeader(reportNumber: 1)
@@ -217,7 +233,6 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate {
     }
     
     func didGetReport(header: String, for reportNumber:Int) {
-        //print("didGetReportData \(reportNumber)")
         let entity = NSEntityDescription.entity(forEntityName: "Report", in: managedContext)!
         let report = NSManagedObject(entity: entity, insertInto: managedContext) as? Report
         report!.setValue(header, forKeyPath: "header")
@@ -225,8 +240,6 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate {
     }
     
     func didGetReport(data: String, for reportNumber: Int, userInfo:Any?) {
-        
-        //print("didGetReportData \(reportNumber)")
         let report = userInfo as! Report
         report.setValue(data, forKeyPath: "data")
         saveReport(report)
@@ -252,7 +265,7 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate {
             print(">>>> Could not save. \(error), \(error.userInfo) \(error.localizedDescription)")
         }
         
-        print("saved \(report.header)")
+        //print("saved \(report.header)")
     }
     
 }
