@@ -9,24 +9,27 @@
 import Cocoa
 import ORSSerial
 import Charts
+import CoreData
 
 
-class OximeterViewController: NSViewController, NSTableViewDelegate, OximeterDeviceDelegate {
+class OximeterViewController: NSViewController, OximeterDeviceDelegate {
     
     // MARK: - Bound Items
 
     @objc dynamic let serialPortManager = ORSSerialPortManager.shared()
     @objc dynamic let oximeter:OximeterDeviceController = OximeterDeviceController()
-    @objc dynamic var reports = [OximeterReport]()
+
     @objc dynamic var chartTitle = ""
     @objc dynamic var connecting = false
     
+    @objc dynamic var managedContext: NSManagedObjectContext!
+
     // MARK: - vars
     
-    var lastSelectedIndex = 0
     fileprivate var numberOfReports = 0
     
     // MARK: - Outlets & Actions
+    @IBOutlet var reportArrayController: NSArrayController!
     @IBOutlet weak var tableView: NSTableView!
     @IBOutlet weak var reportTable: NSTableView!
     @IBOutlet weak var chartView: LineChartView!
@@ -41,9 +44,7 @@ class OximeterViewController: NSViewController, NSTableViewDelegate, OximeterDev
             print("No Availble Devices")
             return
         }
-        
-        reports = [OximeterReport]()
-        
+                
         connectTries = 0
         // leverage the delegate response to bootstrap the search and connect
         connecting = true
@@ -52,13 +53,23 @@ class OximeterViewController: NSViewController, NSTableViewDelegate, OximeterDev
     
     // MARK: - ViewController
     
+    required init?(coder: NSCoder) {
+        super.init(coder:coder)
+        print("init(coder: )")
+        guard let appDelegate = NSApplication.shared.delegate as? AppDelegate else {
+          return
+        }
+        managedContext = appDelegate.persistentContainer.viewContext
+    }
+        
     override func viewDidLoad() {
         super.viewDidLoad()
-
+                
         // Do any additional setup after loading the view.
-        reportTable.delegate = self
         oximeter.delegate = self
         
+        reportArrayController.addObserver(self, forKeyPath: "selectedObjects", options: .new, context: nil)
+
         chartView.noDataText = "Select a report above"
         chartView.backgroundColor = NSUIColor.white
         chartView.legend.font = NSUIFont(name: "HelveticaNeue-Light", size: CGFloat(14.0))!
@@ -75,10 +86,13 @@ class OximeterViewController: NSViewController, NSTableViewDelegate, OximeterDev
         
         var dummy = OximeterReport()
         dummy.header = "200328205541012200B4"
-        reports.append(dummy)
+        saveReport(oxreport: dummy)
+        dummy.data = "5e00385e00375e00375e00375e00375e00375e00375e00385e00385e00395e00395e00395f003a5f003a5f003a5f00395e00385e00375f00375f00365f00365f00375f00375f00385f00385f00385f00395e00395f00395f00395f00395f00385f00375f00375f00375f00375f00385f00395f00395f00385f00385f00395f00395f00385f00385f00375f00375f00375f00375f00375f00385f00395f00395f00395f00395f00395f00385f00385f00385f00385f00385f00385f00385f00375f00375f00375f00375f00375f00385f00395e00395e00395e00395d00385d00385d00385e00385e00395e00395f00395f003a5f003a5f003a"
+        saveReport(oxreport: dummy)
+        
         dummy = OximeterReport()
         dummy.header = "20032720280201420078"
-        reports.append(dummy)
+        saveReport(oxreport: dummy)
     }
 
     override var representedObject: Any? {
@@ -89,7 +103,7 @@ class OximeterViewController: NSViewController, NSTableViewDelegate, OximeterDev
     
     // MARK: - Charts
     
-    func chartUpdate(_ report:OximeterReport) {
+    func chartUpdate(_ report:Report) {
         
         guard report.data != "" else {
             // TODO: pop alert
@@ -132,16 +146,32 @@ class OximeterViewController: NSViewController, NSTableViewDelegate, OximeterDev
         chartTitle = "\(report.startDate) - \(report.endDate) Interval:\(report.timingInterval) Mode:\(report.mode)"
     }
     
-    //  MARK: - reportTable Delegate
-    
-    func tableViewSelectionDidChange(_ notification: Notification) {
-        lastSelectedIndex = reportTable.selectedRow
-        if reports[lastSelectedIndex].data == "" {
-            oximeter.getReportData(reportNumber: lastSelectedIndex+1)
-        } else {
-            chartUpdate(reports[lastSelectedIndex])
+
+    // Select Table View > Bindings inspector > Selection Indexes > Bind to the Array Controller
+    // Set Controller Key to selectionIndexes
+    // To observe the selected objects, set up observation in viewDidLoad
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        guard let keyPath = keyPath else { return }
+        switch keyPath {
+
+        case "selectedObjects":
+
+            if let arrayController = object as? NSArrayController {
+                let reports = arrayController.selectedObjects
+       
+                if let selected = reports![0] as? Report {
+                    if let _ = selected.data {
+                        chartUpdate(selected)
+                    } else {
+                        chartView.clear()
+                    }
+                }
+            }
+
+        default: break
         }
     }
+    
     
     // MARK: - OximeterDeviceController Delegate
     
@@ -186,7 +216,10 @@ class OximeterViewController: NSViewController, NSTableViewDelegate, OximeterDev
     }
     
     func didGetReportHeader(report: OximeterReport) {
-        self.reports.append(report)
+        
+//        saveReport(oxreport: report)
+        oximeter.getReportData(reportNumber: report.number)
+        
         print("didGetReportHeader: \(report.number)")
         if report.number < self.numberOfReports {
             oximeter.getReportHeader(reportNumber: report.number+1)
@@ -194,12 +227,35 @@ class OximeterViewController: NSViewController, NSTableViewDelegate, OximeterDev
     }
     
     func didGetReportData(report: OximeterReport) {
-        reports[report.number-1] = report
-        chartUpdate(report)
+        saveReport(oxreport: report)
+//        chartUpdate(report)
     }
     
     func couldNotCompleteRequest(message: String?) {
         print("device could not complete request: \(message!)")
+    }
+    
+    // MARK: - Core Data
+    func saveReport(oxreport: OximeterReport) {
+        
+        let entity = NSEntityDescription.entity(forEntityName: "Report", in: managedContext)!
+        
+        let report = NSManagedObject(entity: entity, insertInto: managedContext)
+        managedContext.mergePolicy =  NSMergeByPropertyObjectTrumpMergePolicy
+        
+        report.setValue(oxreport.header, forKeyPath: "header")
+        if let data = oxreport.data {
+            report.setValue(data, forKeyPath: "data")
+        }
+        
+        do {
+            try managedContext.save()
+
+        } catch let error as NSError {
+            print(">>>> Could not save. \(error), \(error.userInfo) \(error.localizedDescription)")
+        }
+        
+        print("saved \(oxreport.header)")
     }
 }
 
@@ -210,7 +266,7 @@ class XAxisDateFormatter : IAxisValueFormatter {
     let dateFormatterDate = DateFormatter()
     let dateFormatterTime = DateFormatter()
     var lastDate = ""
-
+    
     func stringForValue(_ value: Double, axis: AxisBase?) -> String {
         dateFormatterDate.dateFormat = "M/d/yy"
         dateFormatterTime.dateFormat = "h:mm:ss"
@@ -221,7 +277,7 @@ class XAxisDateFormatter : IAxisValueFormatter {
 }
 
 class OxTextFieldCell: NSTableHeaderCell {
-
+    
     open override func titleRect(forBounds theRect: NSRect) -> NSRect {
         var titleFrame = super.titleRect(forBounds: theRect)
         let titleSize = self.attributedStringValue.size()
@@ -229,7 +285,7 @@ class OxTextFieldCell: NSTableHeaderCell {
         titleFrame.origin.y = theRect.origin.y - 1.0 + (theRect.size.height - titleSize.height) / 2.0 + 4
         return titleFrame
     }
-
+    
     open override func drawInterior(withFrame cellFrame: NSRect, in controlView: NSView) {
         let titleRect = self.titleRect(forBounds: cellFrame)
         self.attributedStringValue.draw(in: titleRect)

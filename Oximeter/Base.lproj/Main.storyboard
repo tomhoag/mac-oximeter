@@ -142,7 +142,7 @@
                 <customObject id="YLy-65-1bz" customClass="NSFontManager"/>
                 <customObject id="Ady-hI-5gd" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="80" y="169"/>
+            <point key="canvasLocation" x="-423" y="308"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="R2V-B0-nI4">
@@ -216,7 +216,7 @@
                                                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                     </textFieldCell>
                                                                     <connections>
-                                                                        <binding destination="HFv-rs-3hZ" name="value" keyPath="objectValue.startDate" id="4GE-F2-Fan"/>
+                                                                        <binding destination="HFv-rs-3hZ" name="value" keyPath="objectValue.startDate" id="1lA-ti-EQe"/>
                                                                     </connections>
                                                                 </textField>
                                                             </subviews>
@@ -248,7 +248,7 @@
                                                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                     </textFieldCell>
                                                                     <connections>
-                                                                        <binding destination="69i-1e-KzC" name="value" keyPath="objectValue.endDate" id="xIs-Ve-gtk"/>
+                                                                        <binding destination="69i-1e-KzC" name="value" keyPath="objectValue.endDate" id="W0p-uh-eQF"/>
                                                                     </connections>
                                                                 </textField>
                                                             </subviews>
@@ -283,7 +283,7 @@
                                                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                     </textFieldCell>
                                                                     <connections>
-                                                                        <binding destination="Q47-qM-6hm" name="value" keyPath="objectValue.mode" id="StC-2N-1nn"/>
+                                                                        <binding destination="Q47-qM-6hm" name="value" keyPath="objectValue.mode" id="K6k-b2-kiZ"/>
                                                                     </connections>
                                                                 </textField>
                                                             </subviews>
@@ -318,7 +318,7 @@
                                                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                     </textFieldCell>
                                                                     <connections>
-                                                                        <binding destination="PF8-XG-gwB" name="value" keyPath="objectValue.timingInterval" id="0BO-Vf-Nfp"/>
+                                                                        <binding destination="PF8-XG-gwB" name="value" keyPath="objectValue.timingInterval" id="hxb-jJ-39e"/>
                                                                     </connections>
                                                                 </textField>
                                                             </subviews>
@@ -330,12 +330,13 @@
                                                 </tableColumn>
                                             </tableColumns>
                                             <connections>
-                                                <binding destination="BAK-sc-nT5" name="content" keyPath="arrangedObjects" id="rSg-g5-rTb"/>
+                                                <binding destination="mR0-WS-dsS" name="content" keyPath="arrangedObjects" id="Pqw-OB-vUO"/>
+                                                <binding destination="mR0-WS-dsS" name="selectionIndexes" keyPath="selectionIndexes" previousBinding="Pqw-OB-vUO" id="ovu-0A-izU"/>
                                             </connections>
                                         </tableView>
                                     </subviews>
                                 </clipView>
-                                <scroller key="horizontalScroller" wantsLayer="YES" verticalHuggingPriority="750" doubleValue="0.25" horizontal="YES" id="Kdv-Bq-p2M">
+                                <scroller key="horizontalScroller" wantsLayer="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="YES" id="Kdv-Bq-p2M">
                                     <rect key="frame" x="1" y="199" width="648" height="16"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
@@ -359,7 +360,7 @@
                                     <action selector="connect:" target="XfG-lQ-9wD" id="Hyf-x3-T0w"/>
                                 </connections>
                             </button>
-                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="jvm-PM-dAJ">
+                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="jvm-PM-dAJ" userLabel="Connecting View">
                                 <rect key="frame" x="190" y="510" width="327" height="40"/>
                                 <subviews>
                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Zwi-Pb-XZC">
@@ -402,14 +403,15 @@
                     </view>
                     <connections>
                         <outlet property="chartView" destination="YR1-F9-u9N" id="67k-1o-VbD"/>
+                        <outlet property="reportArrayController" destination="mR0-WS-dsS" id="MNR-gV-5d1"/>
                         <outlet property="reportTable" destination="mPt-nR-Ql2" id="RJd-bQ-Ilf"/>
                         <outlet property="tableView" destination="mPt-nR-Ql2" id="5cu-Jl-jbO"/>
                     </connections>
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
-                <arrayController id="BAK-sc-nT5" userLabel="Reports">
+                <arrayController mode="entity" entityName="Report" automaticallyPreparesContent="YES" id="mR0-WS-dsS" userLabel="Report Array Controller">
                     <connections>
-                        <binding destination="XfG-lQ-9wD" name="contentArray" keyPath="reports" id="2TD-cH-q4f"/>
+                        <binding destination="XfG-lQ-9wD" name="managedObjectContext" keyPath="self.managedContext" id="3zY-OQ-QxM"/>
                     </connections>
                 </arrayController>
                 <userDefaultsController representsSharedInstance="YES" id="K4t-6R-owd"/>
