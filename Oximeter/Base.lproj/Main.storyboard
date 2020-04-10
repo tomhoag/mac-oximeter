@@ -211,7 +211,7 @@
                                                                     <rect key="frame" x="0.0" y="0.0" width="180" height="20"/>
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                                                     <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="center" title="Table View Cell" id="wlF-YJ-KYX">
-                                                                        <font key="font" metaFont="menu" size="14"/>
+                                                                        <font key="font" metaFont="label" size="14"/>
                                                                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                     </textFieldCell>
@@ -243,7 +243,7 @@
                                                                     <rect key="frame" x="0.0" y="0.0" width="180" height="20"/>
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                                                     <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="center" title="Table View Cell" id="oLw-wu-MK0">
-                                                                        <font key="font" metaFont="menu" size="14"/>
+                                                                        <font key="font" metaFont="label" size="14"/>
                                                                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                     </textFieldCell>
@@ -278,7 +278,7 @@
                                                                     <rect key="frame" x="0.0" y="0.0" width="90" height="20"/>
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                                                     <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="center" title="Table View Cell" id="zBk-kH-Pv4">
-                                                                        <font key="font" metaFont="menu" size="14"/>
+                                                                        <font key="font" metaFont="label" size="14"/>
                                                                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                     </textFieldCell>
@@ -313,7 +313,7 @@
                                                                     <rect key="frame" x="0.0" y="0.0" width="72" height="20"/>
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                                                     <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="center" title="Table View Cell" id="WzJ-bq-yoh">
-                                                                        <font key="font" metaFont="menu" size="14"/>
+                                                                        <font key="font" metaFont="label" size="14"/>
                                                                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                     </textFieldCell>
@@ -344,26 +344,32 @@
                                                             <rect key="frame" x="531" y="2" width="115" height="20"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
-                                                                <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Qn3-Ra-9mf">
+                                                                <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Qn3-Ra-9mf" customClass="OximeterPopUpButton" customModule="Oximeter" customModuleProvider="target">
                                                                     <rect key="frame" x="19" y="-2" width="77" height="25"/>
                                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                                    <popUpButtonCell key="cell" type="push" title="Item 1" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="H7W-Aw-QmA" id="hCf-VQ-CDx">
+                                                                    <popUpButtonCell key="cell" type="push" title="--" bezelStyle="rounded" alignment="center" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="H7W-Aw-QmA" id="hCf-VQ-CDx">
                                                                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                                                         <font key="font" metaFont="system"/>
                                                                         <menu key="menu" id="9Wj-H3-577">
                                                                             <items>
-                                                                                <menuItem title="Item 1" state="on" id="H7W-Aw-QmA"/>
+                                                                                <menuItem title="--" state="on" id="H7W-Aw-QmA"/>
                                                                                 <menuItem title="Item 2" id="W3K-YU-gh2"/>
                                                                                 <menuItem title="Item 3" id="sOp-Hx-Czs"/>
                                                                             </items>
                                                                         </menu>
                                                                     </popUpButtonCell>
+                                                                    <connections>
+                                                                        <action selector="popupSelectin:" target="XfG-lQ-9wD" id="sPO-Q5-Hf3"/>
+                                                                        <binding destination="zKU-mZ-7Ll" name="content" keyPath="arrangedObjects" id="rkP-5B-NBh"/>
+                                                                        <binding destination="zKU-mZ-7Ll" name="contentValues" keyPath="arrangedObjects.firstName" previousBinding="rkP-5B-NBh" id="c9K-4L-4um"/>
+                                                                        <binding destination="zKU-mZ-7Ll" name="selectedIndex" keyPath="selectionIndex" previousBinding="c9K-4L-4um" id="y5s-Wy-kue"/>
+                                                                    </connections>
                                                                 </popUpButton>
                                                                 <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yC6-Uy-v3h">
                                                                     <rect key="frame" x="0.0" y="0.0" width="115" height="20"/>
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                                                     <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="center" title="Table View Cell" id="eGt-p7-Dea">
-                                                                        <font key="font" metaFont="menu" size="14"/>
+                                                                        <font key="font" metaFont="label" size="14"/>
                                                                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                     </textFieldCell>
@@ -470,6 +476,7 @@
                                 <connections>
                                     <binding destination="zKU-mZ-7Ll" name="content" keyPath="arrangedObjects" id="ClT-mz-nrr"/>
                                     <binding destination="zKU-mZ-7Ll" name="contentValues" keyPath="arrangedObjects.firstName" previousBinding="ClT-mz-nrr" id="UEg-oN-bov"/>
+                                    <binding destination="mR0-WS-dsS" name="selectedObject" keyPath="selection.person.firstName" previousBinding="UEg-oN-bov" id="0VZ-Vn-Aj6"/>
                                 </connections>
                             </popUpButton>
                         </subviews>
@@ -480,6 +487,7 @@
                     </view>
                     <connections>
                         <outlet property="chartView" destination="YR1-F9-u9N" id="67k-1o-VbD"/>
+                        <outlet property="personArrayController" destination="zKU-mZ-7Ll" id="QDz-DU-UoP"/>
                         <outlet property="personPopUp" destination="kBv-GQ-J4d" id="pHW-QV-oSk"/>
                         <outlet property="reportArrayController" destination="mR0-WS-dsS" id="MNR-gV-5d1"/>
                         <outlet property="reportTable" destination="mPt-nR-Ql2" id="RJd-bQ-Ilf"/>

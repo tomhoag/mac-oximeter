@@ -25,6 +25,12 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate, NSTableV
     
     @objc dynamic var managedContext: NSManagedObjectContext!
 
+    @objc dynamic var selectedPerson: NSManagedObject? {
+        didSet {
+            print("woot yo")
+        }
+    }
+    
     // MARK: - vars
     /// number of reports available on the device
     fileprivate var numberOfReports = 0
@@ -34,11 +40,22 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate, NSTableV
     fileprivate let maxConnectTries = 5
     
     // MARK: - Outlets & Actions
+    @IBOutlet var personArrayController: NSArrayController!
     @IBOutlet var reportArrayController: NSArrayController!
     @IBOutlet weak var reportTable: NSTableView!
     @IBOutlet weak var chartView: LineChartView!
     @IBOutlet weak var personPopUp: NSPopUpButton!
 
+    @IBAction func popupSelectin(_ sender: Any) {
+//        print("popupSelection \(sender)")
+//        if let pu = sender as? OximeterPopUpButton {
+//            print("selectedItem: \(pu.selectedItem)")
+//            
+//        }
+//        print("selected row: \(reportTable.selectedRow)")
+        
+    }
+    
     @IBAction func connect(_ sender: Any) {
         
         guard ORSSerialPortManager.shared().availablePorts.count > 0 else {
@@ -75,6 +92,8 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate, NSTableV
         oximeter.delegate = self
         
         reportArrayController.addObserver(self, forKeyPath: "selectedObjects", options: .new, context: nil)
+        personArrayController.addObserver(self, forKeyPath: "selectedObjects", options: .new, context: nil)
+        personArrayController.addObserver(self, forKeyPath: "selectionIndex", options: .new, context: nil)
 
         chartView.noDataText = "Select a report above"
         chartView.backgroundColor = NSUIColor.white
@@ -93,10 +112,13 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate, NSTableV
             column.headerCell = oxc
         }
         
-        saveMockReports()
-        savePersonNamed("Tom")
+//        savePersonNamed("Jesse")
+//        savePersonNamed("Tom")
+//        saveMockReports()
+
     }
     
+    // MARK: - NSTableView Delegate & Callbacks
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
         let result = tableView.makeView(withIdentifier: tableColumn!.identifier, owner: self)
         
@@ -109,16 +131,21 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate, NSTableV
         
     @objc func tableDoubleClick(_ sender:Any) {
         
-        for i in 0..<reportTable.numberOfRows {
-            let view = reportTable.view(atColumn:4, row:i, makeIfNecessary:false) as! OximeterPersonCellView
-            view.textField!.isHidden = false
-            view.personPopup.isHidden = true
-        }
+        hidePersonPopUps()
         
         if reportTable.clickedColumn == 4 && reportTable.clickedRow >= 0 {
             let clickedCellView = reportTable.view(atColumn:reportTable.clickedColumn, row:reportTable.clickedRow, makeIfNecessary:false) as! OximeterPersonCellView
             clickedCellView.textField!.isHidden = true
             clickedCellView.personPopup!.isHidden = false
+        }
+    }
+    
+    func hidePersonPopUps() {
+        for i in 0..<reportTable.numberOfRows {
+            if let view = reportTable.view(atColumn:4, row:i, makeIfNecessary:false) as? OximeterPersonCellView {
+                view.textField!.isHidden = false
+                view.personPopup.isHidden = true
+            }
         }
     }
 
@@ -133,7 +160,6 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate, NSTableV
     func chartUpdate(_ report:Report) {
         
         guard report.data != "" else {
-            // TODO: pop alert
             chartView.clear()
             let alert = NSAlert.init()
             alert.messageText = "Report has no data"
@@ -141,7 +167,6 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate, NSTableV
             alert.alertStyle = .warning
             alert.addButton(withTitle: "OK")
             alert.runModal()
-            
             return
         }
         
@@ -187,26 +212,45 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate, NSTableV
      */
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         guard let keyPath = keyPath else { return }
+        
         switch keyPath {
 
         case "selectedObjects":
-            if let cell = clickedCellView {
-                cell.textField!.isHidden = false
-                cell.personPopup!.isHidden = true
-            }
             
             if let arrayController = object as? NSArrayController {
-                let reports = arrayController.selectedObjects
-                
-                guard reports!.count > 0 else {
-                    return
-                }
-       
-                if let selected = reports![0] as? Report {
-                    if let _ = selected.data {
-                        chartUpdate(selected)
-                    } else {
-                        chartView.clear()
+                print("observed \(keyPath) on \(arrayController.entityName)")
+                if arrayController.entityName == "Report" {
+                    
+                    hidePersonPopUps()
+                    let reports = arrayController.selectedObjects
+                    
+                    guard reports!.count > 0 else {
+                        return
+                    }
+                    
+                    if let selected = reports![0] as? Report {
+                        if let _ = selected.data {
+                            chartUpdate(selected)
+                        } else {
+                            chartView.clear()
+                        }
+                    }
+                } else if arrayController.entityName == "Person" {
+                    print("woot person changed")
+                    let reports = reportArrayController.selectedObjects
+                    guard reports!.count > 0 else {
+                        return
+                    }
+                    let persons = personArrayController.selectedObjects
+                    guard persons!.count == 1 else {
+                        return
+                    }
+                    if let selectedReport = reports![0] as? Report {
+                        if let selectedPerson = persons![0] as? Person {
+                            selectedReport.person = selectedPerson
+                            saveReport(selectedReport)
+                            hidePersonPopUps()
+                        }
                     }
                 }
             }
@@ -234,13 +278,10 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate, NSTableV
                     let nextPort = availablePorts[index+1]
                     oximeter.connect(using: nextPort)
                 } else {
-                    //print("tried them all, no beuno!! \(connectTries)")
                     connectTries = connectTries + 1
                     if(connectTries < maxConnectTries) {
                         didConnect(port: nil, success: false)
                     } else {
-                        //print("tried to connect \(maxConnectTries) times -- no beuno")
-                        
                         let alert = NSAlert.init()
                         alert.messageText = "Could Not Connect"
                         alert.informativeText = "An Oximeter could not be found.\n\nPlease check the connections and turn it on."
@@ -290,19 +331,22 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate, NSTableV
     func saveMockReports() {
         var header = "200328205541012200B4"
         var data = "5e00385e00375e00375e00375e00375e00375e00375e00385e00385e00395e00395e00395f003a5f003a5f003a5f00395e00385e00375f00375f00365f00365f00375f00375f00385f00385f00385f00395e00395f00395f00395f00395f00385f00375f00375f00375f00375f00385f00395f00395f00385f00385f00395f00395f00385f00385f00375f00375f00375f00375f00375f00385f00395f00395f00395f00395f00395f00385f00385f00385f00385f00385f00385f00385f00375f00375f00375f00375f00375f00385f00395e00395e00395e00395d00385d00385d00385e00385e00395e00395f00395f003a5f003a5f003a"
-        saveMockReport(header:header, data:data)
+        saveMockReport(header:header, data:data, person:true)
         
         header = "20032720280201420078"
-        data = ""
-        saveMockReport(header:header, data:data)
+        saveMockReport(header:header, data:data, person:false)
     }
     
-    func saveMockReport(header:String, data:String?) {
+    func saveMockReport(header:String, data:String?, person:Bool) {
         let entity = NSEntityDescription.entity(forEntityName: "Report", in: managedContext)!
         let report = NSManagedObject(entity: entity, insertInto: managedContext) as? Report
         report!.setValue(header, forKeyPath: "header")
         if let data = data {
             report!.setValue(data, forKeyPath: "data")
+        }
+        
+        if person {
+            report!.person = mockPerson
         }
         
         managedContext.mergePolicy =  NSMergeByPropertyObjectTrumpMergePolicy
@@ -325,13 +369,17 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate, NSTableV
         }
     }
     
+    var mockPerson:Person?
+    
     func savePersonNamed(_ name:String) {
         
+        managedContext.mergePolicy =  NSMergeByPropertyObjectTrumpMergePolicy
+
         let entity = NSEntityDescription.entity(forEntityName: "Person", in: managedContext)!
         let person = NSManagedObject(entity: entity, insertInto: managedContext) as? Person
         person!.setValue(name, forKeyPath: "firstName")
         
-        managedContext.mergePolicy =  NSMergeByPropertyObjectTrumpMergePolicy
+        mockPerson = person
         do {
             try managedContext.save()
             
@@ -375,8 +423,26 @@ class OximeterTableHeaderCell: NSTableHeaderCell {
 }
 
 class OximeterPersonCellView: NSTableCellView {
- 
     @IBOutlet weak var personPopup: NSPopUpButton!
-        
+}
+
+class OximeterPopUpButton: NSPopUpButton {
     
+    override func bind(_ binding: NSBindingName, to observable: Any, withKeyPath keyPath: String, options: [NSBindingOption : Any]? = nil) {
+        
+        var newOptions:[NSBindingOption:Any]?
+        
+        if options == nil {
+            newOptions = [NSBindingOption:Any]()
+        } else {
+            if let _ = options {
+                newOptions = options
+            } else {
+                newOptions = [NSBindingOption:Any]()
+            }
+        }
+        newOptions![NSBindingOption.insertsNullPlaceholder] = true
+        newOptions![NSBindingOption.nullPlaceholder] = "--"
+        super.bind(binding, to: observable, withKeyPath: keyPath, options: newOptions)
+    }
 }
