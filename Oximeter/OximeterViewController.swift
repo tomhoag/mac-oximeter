@@ -47,13 +47,25 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate, NSTableV
     @IBOutlet weak var personPopUp: NSPopUpButton!
 
     @IBAction func popupSelectin(_ sender: Any) {
-//        print("popupSelection \(sender)")
-//        if let pu = sender as? OximeterPopUpButton {
-//            print("selectedItem: \(pu.selectedItem)")
-//            
-//        }
-//        print("selected row: \(reportTable.selectedRow)")
-        
+        print("popupSelection \(sender)")
+        if let pu = sender as? OximeterPopUpButton {
+            print("pu frame \(pu.frame)")
+            print("woot person changed")
+            print("selectedItem: \(pu.selectedItem)")
+            print("selected table row: \(reportTable.selectedRow)")
+
+            let reports = reportArrayController.selectedObjects
+            guard reports!.count > 0 else {
+                return
+            }
+            
+            if personArrayController.setSelectionIndex(pu.indexOfSelectedItem) {
+                if let selectedReport = reports![0] as? Report {
+                    saveReport(selectedReport)
+                    hidePersonPopUps()
+                }
+            }
+        }
     }
     
     @IBAction func connect(_ sender: Any) {
@@ -92,8 +104,6 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate, NSTableV
         oximeter.delegate = self
         
         reportArrayController.addObserver(self, forKeyPath: "selectedObjects", options: .new, context: nil)
-        personArrayController.addObserver(self, forKeyPath: "selectedObjects", options: .new, context: nil)
-        personArrayController.addObserver(self, forKeyPath: "selectionIndex", options: .new, context: nil)
 
         chartView.noDataText = "Select a report above"
         chartView.backgroundColor = NSUIColor.white
@@ -213,12 +223,15 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate, NSTableV
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         guard let keyPath = keyPath else { return }
         
+        if let arrayController = object as? NSArrayController {
+            print("observed \(keyPath) on \(arrayController.entityName)")
+        }
+
         switch keyPath {
 
         case "selectedObjects":
             
             if let arrayController = object as? NSArrayController {
-                print("observed \(keyPath) on \(arrayController.entityName)")
                 if arrayController.entityName == "Report" {
                     
                     hidePersonPopUps()
@@ -233,23 +246,6 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate, NSTableV
                             chartUpdate(selected)
                         } else {
                             chartView.clear()
-                        }
-                    }
-                } else if arrayController.entityName == "Person" {
-                    print("woot person changed")
-                    let reports = reportArrayController.selectedObjects
-                    guard reports!.count > 0 else {
-                        return
-                    }
-                    let persons = personArrayController.selectedObjects
-                    guard persons!.count == 1 else {
-                        return
-                    }
-                    if let selectedReport = reports![0] as? Report {
-                        if let selectedPerson = persons![0] as? Person {
-                            selectedReport.person = selectedPerson
-                            saveReport(selectedReport)
-                            hidePersonPopUps()
                         }
                     }
                 }

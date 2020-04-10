@@ -362,7 +362,7 @@
                                                                         <action selector="popupSelectin:" target="XfG-lQ-9wD" id="sPO-Q5-Hf3"/>
                                                                         <binding destination="zKU-mZ-7Ll" name="content" keyPath="arrangedObjects" id="rkP-5B-NBh"/>
                                                                         <binding destination="zKU-mZ-7Ll" name="contentValues" keyPath="arrangedObjects.firstName" previousBinding="rkP-5B-NBh" id="c9K-4L-4um"/>
-                                                                        <binding destination="zKU-mZ-7Ll" name="selectedIndex" keyPath="selectionIndex" previousBinding="c9K-4L-4um" id="y5s-Wy-kue"/>
+                                                                        <binding destination="mR0-WS-dsS" name="selectedObject" keyPath="selection.person" previousBinding="c9K-4L-4um" id="ELU-iS-g9p"/>
                                                                     </connections>
                                                                 </popUpButton>
                                                                 <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yC6-Uy-v3h">
@@ -476,7 +476,7 @@
                                 <connections>
                                     <binding destination="zKU-mZ-7Ll" name="content" keyPath="arrangedObjects" id="ClT-mz-nrr"/>
                                     <binding destination="zKU-mZ-7Ll" name="contentValues" keyPath="arrangedObjects.firstName" previousBinding="ClT-mz-nrr" id="UEg-oN-bov"/>
-                                    <binding destination="mR0-WS-dsS" name="selectedObject" keyPath="selection.person.firstName" previousBinding="UEg-oN-bov" id="0VZ-Vn-Aj6"/>
+                                    <binding destination="mR0-WS-dsS" name="selectedObject" keyPath="selection.person" previousBinding="UEg-oN-bov" id="DBd-qA-EIb"/>
                                 </connections>
                             </popUpButton>
                         </subviews>
