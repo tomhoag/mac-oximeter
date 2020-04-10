@@ -14,11 +14,14 @@
 		AB9693F72437F54800015CF9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AB9693F62437F54800015CF9 /* Assets.xcassets */; };
 		AB9693FA2437F54800015CF9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AB9693F82437F54800015CF9 /* Main.storyboard */; };
 		AB9694032437FB1E00015CF9 /* OximeterDeviceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB9694022437FB1E00015CF9 /* OximeterDeviceController.swift */; };
+		AB9DA9AF243FA94700568F89 /* Report+ComputedVars.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB9DA9AE243FA94700568F89 /* Report+ComputedVars.swift */; };
+		AB9DA9B4243FA9CD00568F89 /* Person+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB9DA9B0243FA9CD00568F89 /* Person+CoreDataClass.swift */; };
+		AB9DA9B5243FA9CD00568F89 /* Person+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB9DA9B1243FA9CD00568F89 /* Person+CoreDataProperties.swift */; };
+		AB9DA9B6243FA9CD00568F89 /* Report+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB9DA9B2243FA9CD00568F89 /* Report+CoreDataClass.swift */; };
+		AB9DA9B7243FA9CD00568F89 /* Report+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB9DA9B3243FA9CD00568F89 /* Report+CoreDataProperties.swift */; };
 		ABB6AD47243BCB85005D4094 /* CollectionExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABB6AD44243BCB84005D4094 /* CollectionExtension.swift */; };
 		ABB6AD49243BCB85005D4094 /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABB6AD46243BCB85005D4094 /* StringExtension.swift */; };
 		ABE90673243D0FBC00D63DCA /* NSMutableAttributedStringExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABE90672243D0FBC00D63DCA /* NSMutableAttributedStringExtensions.swift */; };
-		ABE9067E243E1C5E00D63DCA /* Report+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABE9067C243E1C5E00D63DCA /* Report+CoreDataClass.swift */; };
-		ABE9067F243E1C5E00D63DCA /* Report+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABE9067D243E1C5E00D63DCA /* Report+CoreDataProperties.swift */; };
 		C0696F9DE005855EC1837DD1 /* Pods_Oximeter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C89E1021D4CADDEC9EE7AC3B /* Pods_Oximeter.framework */; };
 /* End PBXBuildFile section */
 
@@ -33,11 +36,14 @@
 		AB9693FB2437F54800015CF9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AB9693FC2437F54800015CF9 /* Oximeter.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Oximeter.entitlements; sourceTree = "<group>"; };
 		AB9694022437FB1E00015CF9 /* OximeterDeviceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OximeterDeviceController.swift; sourceTree = "<group>"; };
+		AB9DA9AE243FA94700568F89 /* Report+ComputedVars.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Report+ComputedVars.swift"; sourceTree = "<group>"; };
+		AB9DA9B0243FA9CD00568F89 /* Person+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Person+CoreDataClass.swift"; sourceTree = SOURCE_ROOT; };
+		AB9DA9B1243FA9CD00568F89 /* Person+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Person+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
+		AB9DA9B2243FA9CD00568F89 /* Report+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Report+CoreDataClass.swift"; sourceTree = SOURCE_ROOT; };
+		AB9DA9B3243FA9CD00568F89 /* Report+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Report+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
 		ABB6AD44243BCB84005D4094 /* CollectionExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionExtension.swift; sourceTree = "<group>"; };
 		ABB6AD46243BCB85005D4094 /* StringExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
 		ABE90672243D0FBC00D63DCA /* NSMutableAttributedStringExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSMutableAttributedStringExtensions.swift; sourceTree = "<group>"; };
-		ABE9067C243E1C5E00D63DCA /* Report+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Report+CoreDataClass.swift"; sourceTree = SOURCE_ROOT; };
-		ABE9067D243E1C5E00D63DCA /* Report+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Report+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
 		C25D5E1D9B27FA213343498C /* Pods-Oximeter.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Oximeter.debug.xcconfig"; path = "Target Support Files/Pods-Oximeter/Pods-Oximeter.debug.xcconfig"; sourceTree = "<group>"; };
 		C89E1021D4CADDEC9EE7AC3B /* Pods_Oximeter.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Oximeter.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E4B02F335CCCEA9587E0CC11 /* Pods-Oximeter.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Oximeter.release.xcconfig"; path = "Target Support Files/Pods-Oximeter/Pods-Oximeter.release.xcconfig"; sourceTree = "<group>"; };
@@ -84,8 +90,11 @@
 		AB9693EE2437F54600015CF9 /* Oximeter */ = {
 			isa = PBXGroup;
 			children = (
-				ABE9067C243E1C5E00D63DCA /* Report+CoreDataClass.swift */,
-				ABE9067D243E1C5E00D63DCA /* Report+CoreDataProperties.swift */,
+				AB9DA9B0243FA9CD00568F89 /* Person+CoreDataClass.swift */,
+				AB9DA9B1243FA9CD00568F89 /* Person+CoreDataProperties.swift */,
+				AB9DA9B2243FA9CD00568F89 /* Report+CoreDataClass.swift */,
+				AB9DA9B3243FA9CD00568F89 /* Report+CoreDataProperties.swift */,
+				AB9DA9AE243FA94700568F89 /* Report+ComputedVars.swift */,
 				AB9693EF2437F54600015CF9 /* AppDelegate.swift */,
 				AB9693F12437F54600015CF9 /* OximeterViewController.swift */,
 				AB9694022437FB1E00015CF9 /* OximeterDeviceController.swift */,
@@ -236,14 +245,17 @@
 			files = (
 				AB9693F52437F54600015CF9 /* Oximeter.xcdatamodeld in Sources */,
 				AB9693F22437F54600015CF9 /* OximeterViewController.swift in Sources */,
+				AB9DA9B4243FA9CD00568F89 /* Person+CoreDataClass.swift in Sources */,
+				AB9DA9AF243FA94700568F89 /* Report+ComputedVars.swift in Sources */,
 				ABE90673243D0FBC00D63DCA /* NSMutableAttributedStringExtensions.swift in Sources */,
+				AB9DA9B6243FA9CD00568F89 /* Report+CoreDataClass.swift in Sources */,
 				AB9694032437FB1E00015CF9 /* OximeterDeviceController.swift in Sources */,
 				AB9693F02437F54600015CF9 /* AppDelegate.swift in Sources */,
-				ABE9067F243E1C5E00D63DCA /* Report+CoreDataProperties.swift in Sources */,
 				ABB6AD49243BCB85005D4094 /* StringExtension.swift in Sources */,
 				AB1143E024382FCA00E83CCB /* DataExtension.swift in Sources */,
 				ABB6AD47243BCB85005D4094 /* CollectionExtension.swift in Sources */,
-				ABE9067E243E1C5E00D63DCA /* Report+CoreDataClass.swift in Sources */,
+				AB9DA9B5243FA9CD00568F89 /* Person+CoreDataProperties.swift in Sources */,
+				AB9DA9B7243FA9CD00568F89 /* Report+CoreDataProperties.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

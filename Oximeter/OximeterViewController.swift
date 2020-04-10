@@ -10,9 +10,10 @@ import Cocoa
 import ORSSerial
 import Charts
 import CoreData
+import AppKit
 
 
-class OximeterViewController: NSViewController, OximeterDeviceDelegate {
+class OximeterViewController: NSViewController, OximeterDeviceDelegate, NSTableViewDelegate {
     
     // MARK: - Bound Items
 
@@ -36,7 +37,8 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate {
     @IBOutlet var reportArrayController: NSArrayController!
     @IBOutlet weak var reportTable: NSTableView!
     @IBOutlet weak var chartView: LineChartView!
-    
+    @IBOutlet weak var personPopUp: NSPopUpButton!
+
     @IBAction func connect(_ sender: Any) {
         
         guard ORSSerialPortManager.shared().availablePorts.count > 0 else {
@@ -79,24 +81,45 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate {
         chartView.legend.font = NSUIFont(name: "HelveticaNeue-Light", size: CGFloat(14.0))!
         chartView.xAxis.valueFormatter = XAxisDateFormatter()
                 
+        reportTable.delegate = self
+        reportTable.doubleAction = #selector(tableDoubleClick)
+        
         reportTable.tableColumns.forEach { (column) in // why can't this be done in the storyboard??
             let exAttr = NSMutableAttributedString(attributedString: column.headerCell.attributedStringValue)
             exAttr.replaceFont(with: NSFont.systemFont(ofSize: 16))
             
-            let oxc = OxTextFieldCell()
+            let oxc = OximeterTableHeaderCell()
             oxc.attributedStringValue = exAttr
             column.headerCell = oxc
         }
         
-//        var dummy = OximeterReport()
-//        dummy.header = "200328205541012200B4"
-//        saveReport(oxreport: dummy)
-//        dummy.data = "5e00385e00375e00375e00375e00375e00375e00375e00385e00385e00395e00395e00395f003a5f003a5f003a5f00395e00385e00375f00375f00365f00365f00375f00375f00385f00385f00385f00395e00395f00395f00395f00395f00385f00375f00375f00375f00375f00385f00395f00395f00385f00385f00395f00395f00385f00385f00375f00375f00375f00375f00375f00385f00395f00395f00395f00395f00395f00385f00385f00385f00385f00385f00385f00385f00375f00375f00375f00375f00375f00385f00395e00395e00395e00395d00385d00385d00385e00385e00395e00395f00395f003a5f003a5f003a"
-//        saveReport(oxreport: dummy)
-//
-//        dummy = OximeterReport()
-//        dummy.header = "20032720280201420078"
-//        saveReport(oxreport: dummy)
+        saveMockReports()
+        savePersonNamed("Tom")
+    }
+    
+    func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
+        let result = tableView.makeView(withIdentifier: tableColumn!.identifier, owner: self)
+        
+        if let r = result as? OximeterPersonCellView {
+            r.personPopup.isHidden = true
+            return r
+        }
+        return result
+    }
+        
+    @objc func tableDoubleClick(_ sender:Any) {
+        
+        for i in 0..<reportTable.numberOfRows {
+            let view = reportTable.view(atColumn:4, row:i, makeIfNecessary:false) as! OximeterPersonCellView
+            view.textField!.isHidden = false
+            view.personPopup.isHidden = true
+        }
+        
+        if reportTable.clickedColumn == 4 && reportTable.clickedRow >= 0 {
+            let clickedCellView = reportTable.view(atColumn:reportTable.clickedColumn, row:reportTable.clickedRow, makeIfNecessary:false) as! OximeterPersonCellView
+            clickedCellView.textField!.isHidden = true
+            clickedCellView.personPopup!.isHidden = false
+        }
     }
 
     override var representedObject: Any? {
@@ -111,12 +134,14 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate {
         
         guard report.data != "" else {
             // TODO: pop alert
+            chartView.clear()
             let alert = NSAlert.init()
             alert.messageText = "Report has no data"
             alert.informativeText = "The selected report has no data."
             alert.alertStyle = .warning
             alert.addButton(withTitle: "OK")
             alert.runModal()
+            
             return
         }
         
@@ -165,9 +190,17 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate {
         switch keyPath {
 
         case "selectedObjects":
-
+            if let cell = clickedCellView {
+                cell.textField!.isHidden = false
+                cell.personPopup!.isHidden = true
+            }
+            
             if let arrayController = object as? NSArrayController {
                 let reports = arrayController.selectedObjects
+                
+                guard reports!.count > 0 else {
+                    return
+                }
        
                 if let selected = reports![0] as? Report {
                     if let _ = selected.data {
@@ -181,7 +214,6 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate {
         default: break
         }
     }
-    
     
     // MARK: - OximeterDeviceController Delegate
     
@@ -255,6 +287,33 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate {
     
     // MARK: - Core Data
     
+    func saveMockReports() {
+        var header = "200328205541012200B4"
+        var data = "5e00385e00375e00375e00375e00375e00375e00375e00385e00385e00395e00395e00395f003a5f003a5f003a5f00395e00385e00375f00375f00365f00365f00375f00375f00385f00385f00385f00395e00395f00395f00395f00395f00385f00375f00375f00375f00375f00385f00395f00395f00385f00385f00395f00395f00385f00385f00375f00375f00375f00375f00375f00385f00395f00395f00395f00395f00395f00385f00385f00385f00385f00385f00385f00385f00375f00375f00375f00375f00375f00385f00395e00395e00395e00395d00385d00385d00385e00385e00395e00395f00395f003a5f003a5f003a"
+        saveMockReport(header:header, data:data)
+        
+        header = "20032720280201420078"
+        data = ""
+        saveMockReport(header:header, data:data)
+    }
+    
+    func saveMockReport(header:String, data:String?) {
+        let entity = NSEntityDescription.entity(forEntityName: "Report", in: managedContext)!
+        let report = NSManagedObject(entity: entity, insertInto: managedContext) as? Report
+        report!.setValue(header, forKeyPath: "header")
+        if let data = data {
+            report!.setValue(data, forKeyPath: "data")
+        }
+        
+        managedContext.mergePolicy =  NSMergeByPropertyObjectTrumpMergePolicy
+        do {
+            try managedContext.save()
+            
+        } catch let error as NSError {
+            print(">>>> Could not save. \(error), \(error.userInfo) \(error.localizedDescription)")
+        }
+    }
+    
     func saveReport(_ report:Report) {
         
         managedContext.mergePolicy =  NSMergeByPropertyObjectTrumpMergePolicy
@@ -264,10 +323,22 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate {
         } catch let error as NSError {
             print(">>>> Could not save. \(error), \(error.userInfo) \(error.localizedDescription)")
         }
-        
-        //print("saved \(report.header)")
     }
     
+    func savePersonNamed(_ name:String) {
+        
+        let entity = NSEntityDescription.entity(forEntityName: "Person", in: managedContext)!
+        let person = NSManagedObject(entity: entity, insertInto: managedContext) as? Person
+        person!.setValue(name, forKeyPath: "firstName")
+        
+        managedContext.mergePolicy =  NSMergeByPropertyObjectTrumpMergePolicy
+        do {
+            try managedContext.save()
+            
+        } catch let error as NSError {
+            print(">>>> Could not save. \(error), \(error.userInfo) \(error.localizedDescription)")
+        }
+    }
 }
 
 // MARK: - Helper Classes
@@ -287,7 +358,7 @@ class XAxisDateFormatter : IAxisValueFormatter {
     }
 }
 
-class OxTextFieldCell: NSTableHeaderCell {
+class OximeterTableHeaderCell: NSTableHeaderCell {
     
     open override func titleRect(forBounds theRect: NSRect) -> NSRect {
         var titleFrame = super.titleRect(forBounds: theRect)
@@ -301,4 +372,11 @@ class OxTextFieldCell: NSTableHeaderCell {
         let titleRect = self.titleRect(forBounds: cellFrame)
         self.attributedStringValue.draw(in: titleRect)
     }
+}
+
+class OximeterPersonCellView: NSTableCellView {
+ 
+    @IBOutlet weak var personPopup: NSPopUpButton!
+        
+    
 }

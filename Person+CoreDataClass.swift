@@ -1,5 +1,5 @@
 //
-//  Report+CoreDataClass.swift
+//  Person+CoreDataClass.swift
 //  Oximeter
 //
 //  Created by Tom on 4/9/20.
@@ -10,7 +10,7 @@
 import Foundation
 import CoreData
 
-@objc(Report)
-public class Report: NSManagedObject {
+@objc(Person)
+public class Person: NSManagedObject {
 
 }
