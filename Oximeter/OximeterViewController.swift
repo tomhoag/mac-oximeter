@@ -49,10 +49,6 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate, NSTableV
     @IBAction func popupSelectin(_ sender: Any) {
         print("popupSelection \(sender)")
         if let pu = sender as? OximeterPopUpButton {
-            print("pu frame \(pu.frame)")
-            print("woot person changed")
-            print("selectedItem: \(pu.selectedItem)")
-            print("selected table row: \(reportTable.selectedRow)")
 
             let reports = reportArrayController.selectedObjects
             guard reports!.count > 0 else {
@@ -137,6 +133,24 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate, NSTableV
             return r
         }
         return result
+    }
+    
+    func tableView(_ tableView: NSTableView, rowActionsForRow row: Int, edge: NSTableView.RowActionEdge) -> [NSTableViewRowAction] {
+        if edge == .trailing {
+            let deleteAction = NSTableViewRowAction(style: .destructive, title: "Delete") { (action, index) in
+                print("Now Deleting . . .")
+                let reports = self.reportArrayController.selectedObjects
+                guard reports!.count > 0 else {
+                    return
+                }
+                
+                if let selectedReport = reports![0] as? Report {
+                    self.deleteReport(selectedReport)
+                }
+            }
+            return [deleteAction]
+        }
+        return [NSTableViewRowAction]()
     }
         
     @objc func tableDoubleClick(_ sender:Any) {
@@ -224,7 +238,7 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate, NSTableV
         guard let keyPath = keyPath else { return }
         
         if let arrayController = object as? NSArrayController {
-            print("observed \(keyPath) on \(arrayController.entityName)")
+            print("observed \(keyPath) on \(String(describing: arrayController.entityName))")
         }
 
         switch keyPath {
@@ -329,6 +343,7 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate, NSTableV
         var data = "5e00385e00375e00375e00375e00375e00375e00375e00385e00385e00395e00395e00395f003a5f003a5f003a5f00395e00385e00375f00375f00365f00365f00375f00375f00385f00385f00385f00395e00395f00395f00395f00395f00385f00375f00375f00375f00375f00385f00395f00395f00385f00385f00395f00395f00385f00385f00375f00375f00375f00375f00375f00385f00395f00395f00395f00395f00395f00385f00385f00385f00385f00385f00385f00385f00375f00375f00375f00375f00375f00385f00395e00395e00395e00395d00385d00385d00385e00385e00395e00395f00395f003a5f003a5f003a"
         saveMockReport(header:header, data:data, person:true)
         
+        data = data + "5e00"
         header = "20032720280201420078"
         saveMockReport(header:header, data:data, person:false)
     }
@@ -363,6 +378,11 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate, NSTableV
         } catch let error as NSError {
             print(">>>> Could not save. \(error), \(error.userInfo) \(error.localizedDescription)")
         }
+    }
+    
+    func deleteReport(_ report:Report) {
+        managedContext.delete(report)
+        try! managedContext.save()
     }
     
     var mockPerson:Person?
