@@ -2,7 +2,7 @@
 //  Person+CoreDataProperties.swift
 //  Oximeter
 //
-//  Created by Tom on 4/9/20.
+//  Created by Tom on 4/10/20.
 //  Copyright © 2020 SquarePi Software. All rights reserved.
 //
 //
@@ -17,9 +17,9 @@ extension Person {
         return NSFetchRequest<Person>(entityName: "Person")
     }
 
+    @NSManaged public var id: String?
     @NSManaged public var firstName: String?
     @NSManaged public var lastName: String?
-    @NSManaged public var id: Int64
     @NSManaged public var report: NSSet?
 
 }

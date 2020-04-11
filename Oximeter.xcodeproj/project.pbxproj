@@ -7,7 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AB0D11662441586E000231FF /* Person+ComputedVars.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB0D11642441586E000231FF /* Person+ComputedVars.swift */; };
 		AB1143E024382FCA00E83CCB /* DataExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB1143DF24382FCA00E83CCB /* DataExtension.swift */; };
+		AB687C9624414113001768A0 /* PatientViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB687C9524414113001768A0 /* PatientViewController.swift */; };
 		AB9693F02437F54600015CF9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB9693EF2437F54600015CF9 /* AppDelegate.swift */; };
 		AB9693F22437F54600015CF9 /* OximeterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB9693F12437F54600015CF9 /* OximeterViewController.swift */; };
 		AB9693F52437F54600015CF9 /* Oximeter.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = AB9693F32437F54600015CF9 /* Oximeter.xcdatamodeld */; };
@@ -26,7 +28,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		AB0D11642441586E000231FF /* Person+ComputedVars.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Person+ComputedVars.swift"; sourceTree = "<group>"; };
 		AB1143DF24382FCA00E83CCB /* DataExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataExtension.swift; sourceTree = "<group>"; };
+		AB687C9524414113001768A0 /* PatientViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PatientViewController.swift; sourceTree = "<group>"; };
 		AB9693EC2437F54600015CF9 /* Oximeter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Oximeter.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AB9693EF2437F54600015CF9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		AB9693F12437F54600015CF9 /* OximeterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OximeterViewController.swift; sourceTree = "<group>"; };
@@ -104,6 +108,8 @@
 				AB9693FC2437F54800015CF9 /* Oximeter.entitlements */,
 				AB9693F32437F54600015CF9 /* Oximeter.xcdatamodeld */,
 				ABE90677243E19B500D63DCA /* Extensions */,
+				AB687C9524414113001768A0 /* PatientViewController.swift */,
+				AB0D11642441586E000231FF /* Person+ComputedVars.swift */,
 			);
 			path = Oximeter;
 			sourceTree = "<group>";
@@ -251,6 +257,8 @@
 				AB9DA9B6243FA9CD00568F89 /* Report+CoreDataClass.swift in Sources */,
 				AB9694032437FB1E00015CF9 /* OximeterDeviceController.swift in Sources */,
 				AB9693F02437F54600015CF9 /* AppDelegate.swift in Sources */,
+				AB687C9624414113001768A0 /* PatientViewController.swift in Sources */,
+				AB0D11662441586E000231FF /* Person+ComputedVars.swift in Sources */,
 				ABB6AD49243BCB85005D4094 /* StringExtension.swift in Sources */,
 				AB1143E024382FCA00E83CCB /* DataExtension.swift in Sources */,
 				ABB6AD47243BCB85005D4094 /* CollectionExtension.swift in Sources */,

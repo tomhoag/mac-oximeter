@@ -44,8 +44,37 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate, NSTableV
     @IBOutlet var reportArrayController: NSArrayController!
     @IBOutlet weak var reportTable: NSTableView!
     @IBOutlet weak var chartView: LineChartView!
-    @IBOutlet weak var personPopUp: NSPopUpButton!
 
+    @IBAction func showPatientWindow(_ sender: Any) {
+                
+        let storyboard = NSStoryboard(name: "Main", bundle: nil)
+        let patientWindowController = storyboard.instantiateController(withIdentifier: "Patient Window") as! NSWindowController
+        
+        if let patientWindow = patientWindowController.window {
+            NSApplication.shared.runModal(for: patientWindow)
+            patientWindow.close()
+        }
+    }
+    
+    @IBAction func rowManagement(_ sender: Any) {
+        
+        if let control = sender as? NSSegmentedControl {
+            if 0 == control.selectedSegment  {
+                // remove
+                if reportTable.selectedRow > -1 {
+                    self.reportArrayController.setSelectionIndex(reportTable.selectedRow)
+                    let reports = self.reportArrayController.selectedObjects
+                    guard reports!.count > 0 else {
+                        return
+                    }
+                    if let selected = reports![0] as? Report {
+                        self.deleteReport(selected)
+                    }
+                }
+            }
+        }
+    }
+    
     @IBAction func popupSelectin(_ sender: Any) {
         print("popupSelection \(sender)")
         if let pu = sender as? OximeterPopUpButton {
