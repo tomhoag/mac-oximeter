@@ -34,7 +34,7 @@ class PatientViewController: NSViewController, NSTableViewDelegate {
                         return
                     }
                     if let selectedPatient = patients![0] as? Person {
-                        UserDefaults.standard.bool(forKey: "NoDeleteConfirmAlertSupression") ?
+                        UserDefaults.standard.bool(forKey: "NoPatientDeleteConfirmAlertSupression") ?
                             self.deletePatient(selectedPatient) :
                             self.confirmDeletePatientAlert { self.deletePatient(selectedPatient) }
                     }
@@ -69,7 +69,7 @@ class PatientViewController: NSViewController, NSTableViewDelegate {
                 }
                 
                 if let selectedPatient = patients![0] as? Person {
-                    UserDefaults.standard.bool(forKey: "NoDeleteConfirmAlertSupression") ?
+                    UserDefaults.standard.bool(forKey: "NoPatientDeleteConfirmAlertSupression") ?
                         self.deletePatient(selectedPatient) :
                         self.confirmDeletePatientAlert { self.deletePatient(selectedPatient) }
                 }
@@ -94,7 +94,7 @@ class PatientViewController: NSViewController, NSTableViewDelegate {
         alert.addButton(withTitle: "Cancel")
         alert.addButton(withTitle: "Delete")
 
-        alert.suppressionButton?.action = #selector(handleNoImageAlertSuppressionButtonClick(_:))
+        alert.suppressionButton?.action = #selector(handleNoPatientDeleteAlertSuppressionButtonClick)
         
         alert.beginSheetModal(for: self.view.window!) { (response) in
             if response == .alertSecondButtonReturn { // Delete
@@ -103,8 +103,8 @@ class PatientViewController: NSViewController, NSTableViewDelegate {
         }
     }
     
-    @objc func handleNoImageAlertSuppressionButtonClick(_ suppressionButton: NSButton) {
-        UserDefaults.standard.set(true, forKey: "NoDeleteConfirmAlertSupression")
+    @objc func handleNoPatientDeleteAlertSuppressionButtonClick(_ suppressionButton: NSButton) {
+        UserDefaults.standard.set(true, forKey: "NoPatientDeleteConfirmAlertSupression")
     }
     
     // MARK: - CRUD

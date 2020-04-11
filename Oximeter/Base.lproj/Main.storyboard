@@ -384,6 +384,51 @@
                         <rect key="frame" x="0.0" y="0.0" width="702" height="719"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <view id="BWd-EY-MAe" userLabel="Download View">
+                                <rect key="frame" x="144" y="304" width="414" height="112"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <subviews>
+                                    <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="y7M-i3-FUS">
+                                        <rect key="frame" x="18" y="44" width="379" height="25"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <popUpButtonCell key="cell" type="push" title="Item 1" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="Jxc-BY-JB5" id="7Fb-ug-yzo">
+                                            <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                            <menu key="menu" id="Ocx-Fw-y4P">
+                                                <items>
+                                                    <menuItem title="Item 1" state="on" id="Jxc-BY-JB5"/>
+                                                    <menuItem title="Item 2" id="8rV-1a-Qso"/>
+                                                    <menuItem title="Item 3" id="FoA-xx-JdG"/>
+                                                </items>
+                                            </menu>
+                                        </popUpButtonCell>
+                                        <connections>
+                                            <binding destination="zKU-mZ-7Ll" name="content" keyPath="arrangedObjects" id="YZv-xz-IKG"/>
+                                            <binding destination="zKU-mZ-7Ll" name="contentValues" keyPath="arrangedObjects.shortDescription" previousBinding="YZv-xz-IKG" id="WXZ-BW-Ejg"/>
+                                        </connections>
+                                    </popUpButton>
+                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="toV-Gg-kwf">
+                                        <rect key="frame" x="18" y="76" width="249" height="19"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <textFieldCell key="cell" lineBreakMode="clipping" title="Add downloaded records to patient:" id="DDR-eV-7LZ">
+                                            <font key="font" metaFont="system" size="15"/>
+                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                        </textFieldCell>
+                                    </textField>
+                                    <button verticalHuggingPriority="750" fixedFrame="YES" tag="628" translatesAutoresizingMaskIntoConstraints="NO" id="zBk-LO-xvM">
+                                        <rect key="frame" x="18" y="18" width="226" height="18"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <buttonCell key="cell" type="check" title="Do not add records to any patient" bezelStyle="regularSquare" imagePosition="left" inset="2" id="jR2-1I-3cx">
+                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                        </buttonCell>
+                                        <connections>
+                                            <action selector="checkboxChanged:" target="XfG-lQ-9wD" id="STI-XS-snL"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                            </view>
                             <scrollView fixedFrame="YES" autohidesScrollers="YES" horizontalLineScroll="24" horizontalPageScroll="10" verticalLineScroll="24" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cuM-WN-Sfo">
                                 <rect key="frame" x="26" y="454" width="650" height="216"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
@@ -418,7 +463,7 @@
                                                                     <rect key="frame" x="0.0" y="0.0" width="180" height="20"/>
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                                                     <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="center" title="Table View Cell" id="wlF-YJ-KYX">
-                                                                        <font key="font" metaFont="system" size="14"/>
+                                                                        <font key="font" metaFont="menu" size="14"/>
                                                                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                     </textFieldCell>
@@ -450,7 +495,7 @@
                                                                     <rect key="frame" x="0.0" y="0.0" width="180" height="20"/>
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                                                     <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="center" title="Table View Cell" id="oLw-wu-MK0">
-                                                                        <font key="font" metaFont="system" size="14"/>
+                                                                        <font key="font" metaFont="menu" size="14"/>
                                                                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                     </textFieldCell>
@@ -485,7 +530,7 @@
                                                                     <rect key="frame" x="0.0" y="0.0" width="90" height="20"/>
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                                                     <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="center" title="Table View Cell" id="zBk-kH-Pv4">
-                                                                        <font key="font" metaFont="system" size="14"/>
+                                                                        <font key="font" metaFont="menu" size="14"/>
                                                                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                     </textFieldCell>
@@ -520,7 +565,7 @@
                                                                     <rect key="frame" x="0.0" y="0.0" width="72" height="20"/>
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                                                     <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="center" title="Table View Cell" id="WzJ-bq-yoh">
-                                                                        <font key="font" metaFont="system" size="14"/>
+                                                                        <font key="font" metaFont="menu" size="14"/>
                                                                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                     </textFieldCell>
@@ -576,7 +621,7 @@
                                                                     <rect key="frame" x="0.0" y="0.0" width="115" height="20"/>
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                                                     <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="center" title="Table View Cell" id="eGt-p7-Dea">
-                                                                        <font key="font" metaFont="system" size="14"/>
+                                                                        <font key="font" metaFont="menu" size="14"/>
                                                                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                     </textFieldCell>
@@ -625,7 +670,7 @@
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
-                                    <action selector="connect:" target="XfG-lQ-9wD" id="Hyf-x3-T0w"/>
+                                    <action selector="showDownloadWindow:" target="XfG-lQ-9wD" id="Kws-xn-gC4"/>
                                 </connections>
                             </button>
                             <customView translatesAutoresizingMaskIntoConstraints="NO" id="jvm-PM-dAJ" userLabel="Connecting View">
@@ -697,6 +742,9 @@
                     </view>
                     <connections>
                         <outlet property="chartView" destination="YR1-F9-u9N" id="67k-1o-VbD"/>
+                        <outlet property="downloadCheckbox" destination="zBk-LO-xvM" id="3Kx-Nk-PtE"/>
+                        <outlet property="downloadPatientPopup" destination="y7M-i3-FUS" id="TL1-3S-Rkh"/>
+                        <outlet property="downloadView" destination="BWd-EY-MAe" id="oxj-Ax-MPW"/>
                         <outlet property="personArrayController" destination="zKU-mZ-7Ll" id="QDz-DU-UoP"/>
                         <outlet property="reportArrayController" destination="mR0-WS-dsS" id="MNR-gV-5d1"/>
                         <outlet property="reportTable" destination="mPt-nR-Ql2" id="RJd-bQ-Ilf"/>

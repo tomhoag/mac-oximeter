@@ -16,15 +16,15 @@ import AppKit
 class OximeterViewController: NSViewController, OximeterDeviceDelegate, NSTableViewDelegate {
     
     // MARK: - Bound Items
-
+    
     @objc dynamic let serialPortManager = ORSSerialPortManager.shared()
     @objc dynamic let oximeter:OximeterDeviceController = OximeterDeviceController()
-
+    
     @objc dynamic var chartTitle = ""
     @objc dynamic var connecting = false
     
     @objc dynamic var managedContext: NSManagedObjectContext!
-
+    
     @objc dynamic var selectedPerson: NSManagedObject? {
         didSet {
             print("woot yo")
@@ -44,15 +44,57 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate, NSTableV
     @IBOutlet var reportArrayController: NSArrayController!
     @IBOutlet weak var reportTable: NSTableView!
     @IBOutlet weak var chartView: LineChartView!
-
+    
+    @IBOutlet weak var downloadView: NSView!
+    
+    @IBOutlet weak var downloadCheckbox: NSButton!
+    @IBOutlet weak var downloadPatientPopup: NSPopUpButton!
+    @IBAction func checkboxChanged(_ sender: NSButton) {
+        downloadPatientPopup.isEnabled = sender.state == .off
+    }
+    
     @IBAction func showPatientWindow(_ sender: Any) {
-                
+        
         let storyboard = NSStoryboard(name: "Main", bundle: nil)
         let patientWindowController = storyboard.instantiateController(withIdentifier: "Patient Window") as! NSWindowController
         
         if let patientWindow = patientWindowController.window {
             NSApplication.shared.runModal(for: patientWindow)
             patientWindow.close()
+        }
+    }
+    
+    var saveReportWithPerson:Person?
+    
+    @IBAction func showDownloadWindow(_ sender: Any) {
+        
+        saveReportWithPerson = nil
+        
+        let view = downloadView
+        
+        let alert = NSAlert()
+        
+        alert.messageText = "Download Records From Oximeter"
+        alert.informativeText = "Turn on and connect your oximeter."
+        
+        alert.accessoryView = view
+        alert.addButton(withTitle: "Cancel")
+        alert.addButton(withTitle: "Download")
+        
+        alert.beginSheetModal(for: self.view.window!) { (response) in
+            if response == .alertSecondButtonReturn {
+                if self.downloadCheckbox.state == .off {
+                    // get the selected person from the arrayController
+                    let persons = self.personArrayController.selectedObjects
+                    if persons!.count > 0 {
+                        if let selected = persons![0] as? Person {
+                            self.saveReportWithPerson = selected
+                        }
+                    }
+                }
+                print(self.saveReportWithPerson)
+                self.connect()
+            }
         }
     }
     
@@ -80,7 +122,7 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate, NSTableV
     @IBAction func popupSelectin(_ sender: Any) {
         print("popupSelection \(sender)")
         if let pu = sender as? OximeterPopUpButton {
-
+            
             let reports = reportArrayController.selectedObjects
             guard reports!.count > 0 else {
                 return
@@ -95,7 +137,7 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate, NSTableV
         }
     }
     
-    @IBAction func connect(_ sender: Any) {
+    fileprivate func connect() {
         
         guard ORSSerialPortManager.shared().availablePorts.count > 0 else {
             
@@ -104,10 +146,10 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate, NSTableV
             alert.informativeText = "There are no serial ports to connect to."
             alert.alertStyle = .informational
             alert.addButton(withTitle: "OK")
-            alert.runModal()
+            alert.beginSheetModal(for: self.view.window!) { (response) in }
             return
         }
-                
+        
         connectTries = 0
         // leverage the delegate response to bootstrap the search and connect
         connecting = true
@@ -119,24 +161,24 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate, NSTableV
     required init?(coder: NSCoder) {
         super.init(coder:coder)
         guard let appDelegate = NSApplication.shared.delegate as? AppDelegate else {
-          return
+            return
         }
         managedContext = appDelegate.persistentContainer.viewContext
     }
-        
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-                
+        
         // Do any additional setup after loading the view.
         oximeter.delegate = self
         
         reportArrayController.addObserver(self, forKeyPath: "selectedObjects", options: .new, context: nil)
-
+        
         chartView.noDataText = "Select a report above"
         chartView.backgroundColor = NSUIColor.white
         chartView.legend.font = NSUIFont(name: "HelveticaNeue-Light", size: CGFloat(14.0))!
         chartView.xAxis.valueFormatter = XAxisDateFormatter()
-                
+        
         reportTable.delegate = self
         reportTable.doubleAction = #selector(tableDoubleClick)
         
@@ -148,7 +190,7 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate, NSTableV
             oxc.attributedStringValue = exAttr
             column.headerCell = oxc
         }
-
+        
     }
     
     // MARK: - NSTableView Delegate & Callbacks
@@ -173,15 +215,15 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate, NSTableV
                 
                 if let selectedReport = reports![0] as? Report {
                     UserDefaults.standard.bool(forKey: "NoRecordDeleteAlertSuppression") ?
-                    self.deleteReport(selected) :
-                    self.confirmDeleteRecordAlert({ self.deleteReport(selected) })
+                        self.deleteReport(selectedReport) :
+                        self.confirmDeleteRecordAlert({ self.deleteReport(selectedReport) })
                 }
             }
             return [deleteAction]
         }
         return [NSTableViewRowAction]()
     }
-        
+    
     @objc func tableDoubleClick(_ sender:Any) {
         
         hidePersonPopUps()
@@ -201,10 +243,10 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate, NSTableV
             }
         }
     }
-
+    
     override var representedObject: Any? {
         didSet {
-        // Update the view, if already loaded.
+            // Update the view, if already loaded.
         }
     }
     
@@ -219,7 +261,7 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate, NSTableV
             alert.informativeText = "The selected report has no data."
             alert.alertStyle = .warning
             alert.addButton(withTitle: "OK")
-            alert.runModal()
+            alert.beginSheetModal(for: self.view.window!) { (response) in }
             return
         }
         
@@ -269,9 +311,9 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate, NSTableV
         if let arrayController = object as? NSArrayController {
             print("observed \(keyPath) on \(String(describing: arrayController.entityName))")
         }
-
+        
         switch keyPath {
-
+            
         case "selectedObjects":
             
             if let arrayController = object as? NSArrayController {
@@ -293,7 +335,7 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate, NSTableV
                     }
                 }
             }
-
+            
         default: break
         }
     }
@@ -326,7 +368,7 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate, NSTableV
                         alert.informativeText = "An Oximeter could not be found.\n\nPlease check the connections and turn it on."
                         alert.alertStyle = .informational
                         alert.addButton(withTitle: "OK")
-                        alert.runModal()
+                        alert.beginSheetModal(for: self.view.window!) { (response) in }
                         
                         connecting = false
                     }
@@ -354,6 +396,10 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate, NSTableV
     func didGetReport(data: String, for reportNumber: Int, userInfo:Any?) {
         let report = userInfo as! Report
         report.setValue(data, forKeyPath: "data")
+        
+        if nil != saveReportWithPerson {
+            report.person = self.saveReportWithPerson
+        }
         saveReport(report)
         
         if(reportNumber + 1 <= self.numberOfReports) {
@@ -419,7 +465,7 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate, NSTableV
     func savePersonNamed(_ name:String) {
         
         managedContext.mergePolicy =  NSMergeByPropertyObjectTrumpMergePolicy
-
+        
         let entity = NSEntityDescription.entity(forEntityName: "Person", in: managedContext)!
         let person = NSManagedObject(entity: entity, insertInto: managedContext) as? Person
         person!.setValue(name, forKeyPath: "firstName")
@@ -447,7 +493,7 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate, NSTableV
         
         alert.addButton(withTitle: "Cancel")
         alert.addButton(withTitle: "Delete")
-
+        
         alert.suppressionButton?.action = #selector(handleNoRecordDeleteAlertSuppressionButtonClick(_:))
         
         alert.beginSheetModal(for: self.view.window!) { (response) in
