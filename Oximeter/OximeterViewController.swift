@@ -68,7 +68,9 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate, NSTableV
                         return
                     }
                     if let selected = reports![0] as? Report {
-                        self.deleteReport(selected)
+                        UserDefaults.standard.bool(forKey: "NoRecordDeleteAlertSuppression") ?
+                            self.deleteReport(selected) :
+                            self.confirmDeleteRecordAlert({ self.deleteReport(selected) })
                     }
                 }
             }
@@ -146,10 +148,6 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate, NSTableV
             oxc.attributedStringValue = exAttr
             column.headerCell = oxc
         }
-        
-//        savePersonNamed("Jesse")
-//        savePersonNamed("Tom")
-//        saveMockReports()
 
     }
     
@@ -174,7 +172,9 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate, NSTableV
                 }
                 
                 if let selectedReport = reports![0] as? Report {
-                    self.deleteReport(selectedReport)
+                    UserDefaults.standard.bool(forKey: "NoRecordDeleteAlertSuppression") ?
+                    self.deleteReport(selected) :
+                    self.confirmDeleteRecordAlert({ self.deleteReport(selected) })
                 }
             }
             return [deleteAction]
@@ -431,6 +431,34 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate, NSTableV
         } catch let error as NSError {
             print(">>>> Could not save. \(error), \(error.userInfo) \(error.localizedDescription)")
         }
+    }
+    
+    // MARK: - Alerts
+    
+    func confirmDeleteRecordAlert(  _ onDelete: @escaping ()->Void ) {
+        let alert = NSAlert()
+        
+        alert.messageText = "Delete Record?"
+        alert.informativeText = "Deleting a record cannot be undone."
+        alert.showsSuppressionButton = true
+        
+        alert.suppressionButton?.title = "I got it, don't show me this message again."
+        alert.suppressionButton?.target = self
+        
+        alert.addButton(withTitle: "Cancel")
+        alert.addButton(withTitle: "Delete")
+
+        alert.suppressionButton?.action = #selector(handleNoRecordDeleteAlertSuppressionButtonClick(_:))
+        
+        alert.beginSheetModal(for: self.view.window!) { (response) in
+            if response == .alertSecondButtonReturn { // Delete
+                onDelete()
+            }
+        }
+    }
+    
+    @objc func handleNoRecordDeleteAlertSuppressionButtonClick(_ suppressionButton: NSButton) {
+        UserDefaults.standard.set(true, forKey: "NoRecordDeleteAlertSuppression")
     }
 }
 

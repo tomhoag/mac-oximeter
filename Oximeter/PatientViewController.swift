@@ -9,7 +9,7 @@
 import Cocoa
 
 class PatientViewController: NSViewController, NSTableViewDelegate {
-
+    
     @objc dynamic var managedContext: NSManagedObjectContext!
     @IBOutlet weak var patientTable: NSTableView!
     @IBOutlet weak var patientArrayController: NSArrayController!
@@ -34,7 +34,9 @@ class PatientViewController: NSViewController, NSTableViewDelegate {
                         return
                     }
                     if let selectedPatient = patients![0] as? Person {
-                        self.deletePatient(selectedPatient)
+                        UserDefaults.standard.bool(forKey: "NoDeleteConfirmAlertSupression") ?
+                            self.deletePatient(selectedPatient) :
+                            self.confirmDeletePatientAlert { self.deletePatient(selectedPatient) }
                     }
                 }
             }
@@ -55,24 +57,57 @@ class PatientViewController: NSViewController, NSTableViewDelegate {
         // Do view setup here.
     }
     
-    func tableView(_ tableView: NSTableView, rowActionsForRow row: Int, edge: NSTableView.RowActionEdge) -> [NSTableViewRowAction] {
-           if edge == .trailing {
-               let deleteAction = NSTableViewRowAction(style: .destructive, title: "Delete") { (action, index) in
-                   print("Now Deleting . . .")
-                   let patients = self.patientArrayController.selectedObjects
-                   guard patients!.count > 0 else {
-                       return
-                   }
-                   
-                   if let selectedPatient = patients![0] as? Person {
-                       self.deletePatient(selectedPatient)
-                   }
-               }
-               return [deleteAction]
-           }
-           return [NSTableViewRowAction]()
-       }
+    // MARK: - TableViewDelegate
     
+    func tableView(_ tableView: NSTableView, rowActionsForRow row: Int, edge: NSTableView.RowActionEdge) -> [NSTableViewRowAction] {
+        if edge == .trailing {
+            let deleteAction = NSTableViewRowAction(style: .destructive, title: "Delete") { (action, index) in
+                print("Now Deleting . . .")
+                let patients = self.patientArrayController.selectedObjects
+                guard patients!.count > 0 else {
+                    return
+                }
+                
+                if let selectedPatient = patients![0] as? Person {
+                    UserDefaults.standard.bool(forKey: "NoDeleteConfirmAlertSupression") ?
+                        self.deletePatient(selectedPatient) :
+                        self.confirmDeletePatientAlert { self.deletePatient(selectedPatient) }
+                }
+            }
+            return [deleteAction]
+        }
+        return [NSTableViewRowAction]()
+    }
+    
+    // MARK: - Alerts
+    
+    func confirmDeletePatientAlert(  _ onDelete: @escaping ()->Void ) {
+        let alert = NSAlert()
+        
+        alert.messageText = "Delete Patient?"
+        alert.informativeText = "Deleting a patient cannot be undone."
+        alert.showsSuppressionButton = true
+        
+        alert.suppressionButton?.title = "I got it, don't show me this message again."
+        alert.suppressionButton?.target = self
+        
+        alert.addButton(withTitle: "Cancel")
+        alert.addButton(withTitle: "Delete")
+
+        alert.suppressionButton?.action = #selector(handleNoImageAlertSuppressionButtonClick(_:))
+        
+        alert.beginSheetModal(for: self.view.window!) { (response) in
+            if response == .alertSecondButtonReturn { // Delete
+                onDelete()
+            }
+        }
+    }
+    
+    @objc func handleNoImageAlertSuppressionButtonClick(_ suppressionButton: NSButton) {
+        UserDefaults.standard.set(true, forKey: "NoDeleteConfirmAlertSupression")
+    }
+    
+    // MARK: - CRUD
     fileprivate func createPatient(id:String = UUID().uuidString, firstName:String="", lastName:String="") {
         let entity = NSEntityDescription.entity(forEntityName: "Person", in: managedContext)!
         let person = NSManagedObject(entity: entity, insertInto: managedContext) as? Person
@@ -82,8 +117,8 @@ class PatientViewController: NSViewController, NSTableViewDelegate {
         try! managedContext.save()
     }
     
-     fileprivate func deletePatient(_ patient:Person) {
-           managedContext.delete(patient)
-           try! managedContext.save()
-       }
+    fileprivate func deletePatient(_ patient:Person) {
+        managedContext.delete(patient)
+        try! managedContext.save()
+    }
 }
