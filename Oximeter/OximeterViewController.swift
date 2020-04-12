@@ -38,6 +38,8 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate, NSTableV
     fileprivate var connectTries = 0
     /// maximum number of times to attempt to find and connect to the oximeter
     fileprivate let maxConnectTries = 5
+    /// flag to indicate that user has cancelled connect
+    fileprivate var connectCanceled = false
     
     // MARK: - Outlets & Actions
     @IBOutlet var personArrayController: NSArrayController!
@@ -119,9 +121,8 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate, NSTableV
     }
     
     @IBAction func popupSelectin(_ sender: Any) {
-        print("popupSelection \(sender)")
+
         if let pu = sender as? OximeterPopUpButton {
-            
             let reports = reportArrayController.selectedObjects
             guard reports!.count > 0 else {
                 return
@@ -150,9 +151,25 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate, NSTableV
         }
         
         connectTries = 0
-        // leverage the delegate response to bootstrap the search and connect
         connecting = true
+        connectCanceled = false
+        // leverage the delegate response to bootstrap the search and connect
         didConnect(port: nil, success: false)
+        
+        let alert = NSAlert.init()
+        alert.alertStyle = .informational
+        alert.messageText = "Looking for Oximeter . . . "
+        alert.addButton(withTitle: "Cancel")
+        let progressbar = NSProgressIndicator()
+        progressbar.isIndeterminate = true
+        progressbar.style = .bar
+        progressbar.startAnimation(nil)
+        progressbar.frame = NSRect(x:0, y:0, width:300, height:20)
+        alert.accessoryView = progressbar
+        alert.beginSheetModal(for: self.view.window!) { (response) in
+            self.connectCanceled = true
+            self.view.window!.endSheet(self.view.window!.sheets[0])
+        }
     }
     
     // MARK: - ViewController
@@ -343,6 +360,11 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate, NSTableV
     
     func didConnect(port:ORSSerialPort?, success:Bool) {
         
+        guard false == connectCanceled else {
+            self.view.window!.endSheet(self.view.window!.sheets[0])
+            return
+        }
+        
         let availablePorts = ORSSerialPortManager.shared().availablePorts
         if success {
             connecting = false
@@ -362,6 +384,10 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate, NSTableV
                     if(connectTries < maxConnectTries) {
                         didConnect(port: nil, success: false)
                     } else {
+                        
+                        connectCanceled = true
+                        self.view.window!.endSheet(self.view.window!.sheets[0])
+                        
                         let alert = NSAlert.init()
                         alert.messageText = "Could Not Connect"
                         alert.informativeText = "An Oximeter could not be found.\n\nPlease check the connections and turn it on."
@@ -379,6 +405,12 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate, NSTableV
     }
     
     func didGetNumberOfReports(numberOfReports: Int) {
+        
+        guard false == connectCanceled else {
+            self.view.window!.endSheet(self.view.window!.sheets[0])
+            return
+        }
+        
         self.numberOfReports = numberOfReports
         if numberOfReports > 0 {
             oximeter.getReportHeader(reportNumber: 1)
@@ -400,6 +432,11 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate, NSTableV
             report.person = self.saveReportWithPerson
         }
         saveReport(report)
+        
+        guard false == connectCanceled else {
+            self.view.window!.endSheet(self.view.window!.sheets[0])
+            return
+        }
         
         if(reportNumber + 1 <= self.numberOfReports) {
             oximeter.getReportHeader(reportNumber: reportNumber+1)
