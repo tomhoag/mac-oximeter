@@ -45,7 +45,7 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate, NSTableV
     @IBOutlet weak var reportTable: NSTableView!
     @IBOutlet weak var chartView: LineChartView!
     
-    @IBOutlet weak var downloadView: NSView!
+    @IBOutlet var downloadView: NSView!
     
     @IBOutlet weak var downloadCheckbox: NSButton!
     @IBOutlet weak var downloadPatientPopup: NSPopUpButton!
@@ -92,7 +92,6 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate, NSTableV
                         }
                     }
                 }
-                print(self.saveReportWithPerson)
                 self.connect()
             }
         }
