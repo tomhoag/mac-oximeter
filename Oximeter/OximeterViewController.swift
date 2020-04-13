@@ -51,6 +51,13 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate, NSTableV
     
     @IBOutlet weak var downloadCheckbox: NSButton!
     @IBOutlet weak var downloadPatientPopup: NSPopUpButton!
+    
+    @IBAction func showDownloadManager(_ sender:NSButton) {
+        let storyboard = NSStoryboard(name: "Main", bundle: nil)
+        let downloadViewController = storyboard.instantiateController(withIdentifier: "Download VC") as! NSViewController
+        self.presentAsSheet(downloadViewController)
+    }
+    
     @IBAction func checkboxChanged(_ sender: NSButton) {
         downloadPatientPopup.isEnabled = sender.state == .off
     }

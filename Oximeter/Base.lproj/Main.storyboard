@@ -186,110 +186,139 @@
             </objects>
             <point key="canvasLocation" x="733" y="-92"/>
         </scene>
-        <!--View Controller-->
+        <!--Download View Controller-->
         <scene sceneID="4hP-kK-RJ8">
             <objects>
-                <viewController id="QLB-vc-Kxi" sceneMemberID="viewController">
-                    <view key="view" id="IJC-0s-PcC" userLabel="Download View">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="525"/>
-                        <autoresizingMask key="autoresizingMask"/>
+                <viewController storyboardIdentifier="Download VC" showSeguePresentationStyle="single" id="QLB-vc-Kxi" customClass="DownloadViewController" customModule="Oximeter" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" translatesAutoresizingMaskIntoConstraints="NO" id="IJC-0s-PcC" userLabel="Download View">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="600"/>
                         <subviews>
-                            <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="V4h-VQ-kmY" userLabel="Assign to patient view">
-                                <rect key="frame" x="0.0" y="359" width="414" height="115"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="vq9-9U-OfG" userLabel="Header">
+                                <rect key="frame" x="0.0" y="555" width="414" height="45"/>
                                 <subviews>
-                                    <button verticalHuggingPriority="750" fixedFrame="YES" tag="628" translatesAutoresizingMaskIntoConstraints="NO" id="htA-vZ-g2A">
-                                        <rect key="frame" x="18" y="18" width="226" height="18"/>
+                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1nE-Uv-fXh">
+                                        <rect key="frame" x="124" y="4" width="163" height="21"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                        <buttonCell key="cell" type="check" title="Do not add records to any patient" bezelStyle="regularSquare" imagePosition="left" inset="2" id="JpW-bK-PIe">
-                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                            <font key="font" metaFont="system"/>
-                                        </buttonCell>
-                                        <connections>
-                                            <action selector="checkboxChanged:" target="XfG-lQ-9wD" id="oOf-RV-3Lh"/>
-                                        </connections>
-                                    </button>
-                                    <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="oBg-eu-FBz">
-                                        <rect key="frame" x="18" y="44" width="379" height="25"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                        <popUpButtonCell key="cell" type="push" title="Item 1" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="ShU-VI-1XT" id="k3A-Iw-ggC">
-                                            <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
-                                            <font key="font" metaFont="system"/>
-                                            <menu key="menu" id="hmg-Cx-Awy">
-                                                <items>
-                                                    <menuItem title="Item 1" state="on" id="ShU-VI-1XT"/>
-                                                    <menuItem title="Item 2" id="SxS-1T-eUI"/>
-                                                    <menuItem title="Item 3" id="SmL-81-jpL"/>
-                                                </items>
-                                            </menu>
-                                        </popUpButtonCell>
-                                        <connections>
-                                            <binding destination="zKU-mZ-7Ll" name="content" keyPath="arrangedObjects" id="oNi-ub-fOy"/>
-                                            <binding destination="zKU-mZ-7Ll" name="contentValues" keyPath="arrangedObjects.shortDescription" previousBinding="oNi-ub-fOy" id="DFY-24-TtR"/>
-                                        </connections>
-                                    </popUpButton>
-                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="nbo-t6-6G1">
-                                        <rect key="frame" x="18" y="76" width="249" height="19"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                        <textFieldCell key="cell" lineBreakMode="clipping" title="Add downloaded records to patient:" id="Pw8-Rs-eYO">
-                                            <font key="font" metaFont="system" size="15"/>
+                                        <textFieldCell key="cell" lineBreakMode="clipping" title="Oximeter Download" id="n9w-0m-dbB">
+                                            <font key="font" metaFont="system" size="18"/>
                                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
+                                    </textField>
+                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bLO-Nv-EEP">
+                                        <rect key="frame" x="18" y="0.0" width="86" height="16"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <textFieldCell key="cell" lineBreakMode="clipping" title="Label" id="Pgn-K6-hPG">
+                                            <font key="font" metaFont="system"/>
+                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                        </textFieldCell>
+                                        <connections>
+                                            <binding destination="QLB-vc-Kxi" name="value" keyPath="self.stateString" id="ovS-tm-Oqq"/>
+                                        </connections>
                                     </textField>
                                 </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="45" id="evG-gy-J32"/>
+                                </constraints>
                             </customView>
-                            <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="scm-TQ-csR">
-                                <rect key="frame" x="0.0" y="266" width="414" height="85"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="V4h-VQ-kmY" userLabel="Setup">
+                                <rect key="frame" x="0.0" y="446" width="414" height="105"/>
                                 <subviews>
-                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="K1c-O7-ALA">
-                                        <rect key="frame" x="18" y="46" width="174" height="19"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                        <textFieldCell key="cell" lineBreakMode="clipping" title="Looking for oximeter . . . " id="lI2-Kc-HmY">
-                                            <font key="font" metaFont="system" size="15"/>
-                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                        </textFieldCell>
-                                    </textField>
-                                    <progressIndicator wantsLayer="YES" fixedFrame="YES" maxValue="100" indeterminate="YES" style="bar" translatesAutoresizingMaskIntoConstraints="NO" id="3bD-GJ-rNs">
-                                        <rect key="frame" x="20" y="19" width="374" height="20"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                    </progressIndicator>
+                                    <stackView distribution="fill" orientation="vertical" alignment="leading" spacing="10" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" fixedFrame="YES" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ZOa-NC-buH">
+                                        <rect key="frame" x="20" y="17" width="245" height="74"/>
+                                        <subviews>
+                                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="nbo-t6-6G1">
+                                                <rect key="frame" x="-2" y="55" width="249" height="19"/>
+                                                <textFieldCell key="cell" lineBreakMode="clipping" title="Add downloaded records to patient:" id="Pw8-Rs-eYO">
+                                                    <font key="font" metaFont="system" size="15"/>
+                                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                </textFieldCell>
+                                            </textField>
+                                            <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="oBg-eu-FBz">
+                                                <rect key="frame" x="-2" y="21" width="77" height="25"/>
+                                                <popUpButtonCell key="cell" type="push" title="Item 1" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="ShU-VI-1XT" id="k3A-Iw-ggC">
+                                                    <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                                                    <font key="font" metaFont="system"/>
+                                                    <menu key="menu" id="hmg-Cx-Awy">
+                                                        <items>
+                                                            <menuItem title="Item 1" state="on" id="ShU-VI-1XT"/>
+                                                            <menuItem title="Item 2" id="SxS-1T-eUI"/>
+                                                            <menuItem title="Item 3" id="SmL-81-jpL"/>
+                                                        </items>
+                                                    </menu>
+                                                </popUpButtonCell>
+                                                <connections>
+                                                    <binding destination="zKU-mZ-7Ll" name="content" keyPath="arrangedObjects" id="oNi-ub-fOy"/>
+                                                    <binding destination="zKU-mZ-7Ll" name="contentValues" keyPath="arrangedObjects.shortDescription" previousBinding="oNi-ub-fOy" id="DFY-24-TtR"/>
+                                                </connections>
+                                            </popUpButton>
+                                            <button verticalHuggingPriority="750" tag="628" translatesAutoresizingMaskIntoConstraints="NO" id="htA-vZ-g2A">
+                                                <rect key="frame" x="-2" y="-2" width="226" height="18"/>
+                                                <buttonCell key="cell" type="check" title="Do not add records to any patient" bezelStyle="regularSquare" imagePosition="left" inset="2" id="JpW-bK-PIe">
+                                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                    <font key="font" metaFont="system"/>
+                                                </buttonCell>
+                                                <connections>
+                                                    <action selector="checkboxChanged:" target="XfG-lQ-9wD" id="oOf-RV-3Lh"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                        <visibilityPriorities>
+                                            <integer value="1000"/>
+                                            <integer value="1000"/>
+                                            <integer value="1000"/>
+                                        </visibilityPriorities>
+                                        <customSpacing>
+                                            <real value="3.4028234663852886e+38"/>
+                                            <real value="3.4028234663852886e+38"/>
+                                            <real value="3.4028234663852886e+38"/>
+                                        </customSpacing>
+                                    </stackView>
                                 </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="105" id="bRV-Xl-A8e"/>
+                                </constraints>
                             </customView>
-                            <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7qj-2x-Fs6">
-                                <rect key="frame" x="0.0" y="61" width="414" height="197"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="scm-TQ-csR" userLabel="Download">
+                                <rect key="frame" x="0.0" y="350" width="414" height="105"/>
                                 <subviews>
-                                    <button horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9b8-Pg-rNp">
-                                        <rect key="frame" x="20" y="137" width="13" height="13"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                        <buttonCell key="cell" type="disclosureTriangle" bezelStyle="disclosure" alignment="left" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="ADw-bI-tnf">
-                                            <behavior key="behavior" pushIn="YES" changeContents="YES" lightByContents="YES"/>
-                                            <font key="font" metaFont="system"/>
-                                        </buttonCell>
-                                    </button>
-                                    <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="06U-gM-xnS">
-                                        <rect key="frame" x="41" y="20" width="355" height="108"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                        <textFieldCell key="cell" selectable="YES" title="Multiline Label" id="BVy-7c-8Us">
-                                            <font key="font" metaFont="system"/>
-                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                        </textFieldCell>
-                                    </textField>
-                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="CNz-Gp-TCt">
-                                        <rect key="frame" x="39" y="136" width="62" height="16"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                        <textFieldCell key="cell" lineBreakMode="clipping" title="More Info" id="3Mm-ji-BIy">
-                                            <font key="font" metaFont="system"/>
-                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                        </textFieldCell>
-                                    </textField>
+                                    <stackView distribution="fill" orientation="vertical" alignment="leading" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" fixedFrame="YES" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="JBv-KQ-D9H">
+                                        <rect key="frame" x="20" y="45" width="374" height="45"/>
+                                        <subviews>
+                                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="K1c-O7-ALA">
+                                                <rect key="frame" x="-2" y="26" width="174" height="19"/>
+                                                <textFieldCell key="cell" lineBreakMode="clipping" title="Looking for oximeter . . . " id="lI2-Kc-HmY">
+                                                    <font key="font" metaFont="system" size="15"/>
+                                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                </textFieldCell>
+                                            </textField>
+                                            <progressIndicator wantsLayer="YES" maxValue="100" indeterminate="YES" style="bar" translatesAutoresizingMaskIntoConstraints="NO" id="3bD-GJ-rNs">
+                                                <rect key="frame" x="0.0" y="-1" width="374" height="20"/>
+                                            </progressIndicator>
+                                        </subviews>
+                                        <visibilityPriorities>
+                                            <integer value="1000"/>
+                                            <integer value="1000"/>
+                                        </visibilityPriorities>
+                                        <customSpacing>
+                                            <real value="3.4028234663852886e+38"/>
+                                            <real value="3.4028234663852886e+38"/>
+                                        </customSpacing>
+                                    </stackView>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="100" id="Ha0-D1-axU"/>
+                                    <constraint firstAttribute="height" constant="105" id="WfE-9t-vAA"/>
+                                </constraints>
+                            </customView>
+                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="7qj-2x-Fs6" userLabel="Not Found">
+                                <rect key="frame" x="0.0" y="150" width="414" height="200"/>
+                                <subviews>
                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4Nd-dO-Duu">
-                                        <rect key="frame" x="18" y="158" width="168" height="19"/>
+                                        <rect key="frame" x="22" y="161" width="168" height="19"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <textFieldCell key="cell" lineBreakMode="clipping" title="Oximeter was not found" id="Psc-qn-W4u">
                                             <font key="font" metaFont="system" size="15"/>
@@ -297,48 +326,155 @@
                                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
                                     </textField>
+                                    <stackView distribution="fill" orientation="horizontal" alignment="centerY" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" fixedFrame="YES" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QDf-rT-puH">
+                                        <rect key="frame" x="24" y="137" width="79" height="16"/>
+                                        <subviews>
+                                            <button horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="9b8-Pg-rNp">
+                                                <rect key="frame" x="0.0" y="2" width="13" height="13"/>
+                                                <buttonCell key="cell" type="disclosureTriangle" bezelStyle="disclosure" alignment="left" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="ADw-bI-tnf">
+                                                    <behavior key="behavior" pushIn="YES" changeContents="YES" lightByContents="YES"/>
+                                                    <font key="font" metaFont="system"/>
+                                                </buttonCell>
+                                            </button>
+                                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="CNz-Gp-TCt">
+                                                <rect key="frame" x="19" y="0.0" width="62" height="16"/>
+                                                <textFieldCell key="cell" lineBreakMode="clipping" title="More Info" id="3Mm-ji-BIy">
+                                                    <font key="font" metaFont="system"/>
+                                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                </textFieldCell>
+                                            </textField>
+                                        </subviews>
+                                        <visibilityPriorities>
+                                            <integer value="1000"/>
+                                            <integer value="1000"/>
+                                        </visibilityPriorities>
+                                        <customSpacing>
+                                            <real value="3.4028234663852886e+38"/>
+                                            <real value="3.4028234663852886e+38"/>
+                                        </customSpacing>
+                                    </stackView>
+                                    <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Mlx-ac-0dM">
+                                        <rect key="frame" x="24" y="20" width="370" height="108"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <subviews>
+                                            <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="06U-gM-xnS">
+                                                <rect key="frame" x="18" y="10" width="347" height="91"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                <textFieldCell key="cell" selectable="YES" title="Multiline Label" id="BVy-7c-8Us">
+                                                    <font key="font" metaFont="system"/>
+                                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                </textFieldCell>
+                                            </textField>
+                                        </subviews>
+                                    </customView>
                                 </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="200" id="aJU-XP-Nve"/>
+                                    <constraint firstAttribute="height" constant="200" id="mPj-80-gz5"/>
+                                </constraints>
                             </customView>
-                            <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2m2-4g-Jdu">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="61"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="BuV-QE-3JK" userLabel="Done">
+                                <rect key="frame" x="0.0" y="45" width="414" height="105"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            </customView>
+                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="2m2-4g-Jdu" userLabel="Buttons">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="47"/>
                                 <subviews>
-                                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bFS-J0-4DF">
-                                        <rect key="frame" x="318" y="13" width="82" height="32"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                        <buttonCell key="cell" type="push" title="Cancel" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="WOo-RC-QKf">
-                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                            <font key="font" metaFont="system"/>
-                                            <string key="keyEquivalent" base64-UTF8="YES">
+                                    <stackView distribution="fill" orientation="horizontal" alignment="bottom" spacing="12" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3En-lz-ayP">
+                                        <rect key="frame" x="164" y="13" width="230" height="21"/>
+                                        <subviews>
+                                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Gup-Yk-g1j">
+                                                <rect key="frame" x="-6" y="-7" width="101" height="32"/>
+                                                <buttonCell key="cell" type="push" title="Download" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="0yt-JC-1ld">
+                                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                    <font key="font" metaFont="system"/>
+                                                </buttonCell>
+                                                <connections>
+                                                    <action selector="download:" target="QLB-vc-Kxi" id="vxJ-Kc-PiH"/>
+                                                </connections>
+                                            </button>
+                                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="bFS-J0-4DF">
+                                                <rect key="frame" x="95" y="-7" width="82" height="32"/>
+                                                <buttonCell key="cell" type="push" title="Cancel" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="WOo-RC-QKf">
+                                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                    <font key="font" metaFont="system"/>
+                                                    <string key="keyEquivalent" base64-UTF8="YES">
 Gw
 </string>
-                                        </buttonCell>
-                                    </button>
-                                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Gup-Yk-g1j">
-                                        <rect key="frame" x="217" y="13" width="101" height="32"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                        <buttonCell key="cell" type="push" title="Download" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="0yt-JC-1ld">
-                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                            <font key="font" metaFont="system"/>
-                                        </buttonCell>
-                                    </button>
+                                                </buttonCell>
+                                                <connections>
+                                                    <action selector="cancel:" target="QLB-vc-Kxi" id="mcJ-K3-m6i"/>
+                                                </connections>
+                                            </button>
+                                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="XnL-Qz-QwG">
+                                                <rect key="frame" x="177" y="-7" width="59" height="32"/>
+                                                <buttonCell key="cell" type="push" title="OK" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Uyv-hV-g7e">
+                                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                    <font key="font" metaFont="system"/>
+                                                </buttonCell>
+                                                <connections>
+                                                    <action selector="ok:" target="QLB-vc-Kxi" id="4ps-jy-U6z"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                        <visibilityPriorities>
+                                            <integer value="1000"/>
+                                            <integer value="1000"/>
+                                            <integer value="1000"/>
+                                        </visibilityPriorities>
+                                        <customSpacing>
+                                            <real value="3.4028234663852886e+38"/>
+                                            <real value="3.4028234663852886e+38"/>
+                                            <real value="3.4028234663852886e+38"/>
+                                        </customSpacing>
+                                    </stackView>
                                 </subviews>
+                                <constraints>
+                                    <constraint firstItem="3En-lz-ayP" firstAttribute="centerY" secondItem="2m2-4g-Jdu" secondAttribute="centerY" id="Tcc-c9-1g3"/>
+                                    <constraint firstAttribute="height" constant="47" id="mYK-hV-tm1"/>
+                                    <constraint firstAttribute="trailing" secondItem="3En-lz-ayP" secondAttribute="trailing" constant="20" id="mnl-Pk-gBc"/>
+                                </constraints>
                             </customView>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1nE-Uv-fXh">
-                                <rect key="frame" x="126" y="484" width="163" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <textFieldCell key="cell" lineBreakMode="clipping" title="Oximeter Download" id="n9w-0m-dbB">
-                                    <font key="font" metaFont="system" size="18"/>
-                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                </textFieldCell>
-                            </textField>
                         </subviews>
+                        <constraints>
+                            <constraint firstItem="7qj-2x-Fs6" firstAttribute="top" secondItem="IJC-0s-PcC" secondAttribute="top" constant="250" placeholder="YES" id="3zT-6q-UP9"/>
+                            <constraint firstItem="vq9-9U-OfG" firstAttribute="top" secondItem="IJC-0s-PcC" secondAttribute="top" id="9ny-Cl-zuM"/>
+                            <constraint firstItem="2m2-4g-Jdu" firstAttribute="width" secondItem="IJC-0s-PcC" secondAttribute="width" id="AFl-de-nbv"/>
+                            <constraint firstAttribute="height" constant="600" id="Ddo-gP-AtJ"/>
+                            <constraint firstItem="scm-TQ-csR" firstAttribute="leading" secondItem="IJC-0s-PcC" secondAttribute="leading" id="E47-ql-AHq"/>
+                            <constraint firstItem="V4h-VQ-kmY" firstAttribute="top" secondItem="IJC-0s-PcC" secondAttribute="top" constant="49" placeholder="YES" id="F5Y-M0-OF5"/>
+                            <constraint firstItem="scm-TQ-csR" firstAttribute="top" secondItem="IJC-0s-PcC" secondAttribute="top" constant="145" placeholder="YES" id="Ji6-5m-dXA"/>
+                            <constraint firstItem="vq9-9U-OfG" firstAttribute="width" secondItem="IJC-0s-PcC" secondAttribute="width" id="Pc4-dv-W5Q"/>
+                            <constraint firstItem="2m2-4g-Jdu" firstAttribute="leading" secondItem="IJC-0s-PcC" secondAttribute="leading" id="VP9-b5-Fiw"/>
+                            <constraint firstItem="7qj-2x-Fs6" firstAttribute="width" secondItem="IJC-0s-PcC" secondAttribute="width" id="aMz-aX-8Al"/>
+                            <constraint firstAttribute="bottom" secondItem="2m2-4g-Jdu" secondAttribute="bottom" id="gMi-pl-9iv"/>
+                            <constraint firstItem="scm-TQ-csR" firstAttribute="width" secondItem="IJC-0s-PcC" secondAttribute="width" id="qEq-O0-vjj"/>
+                            <constraint firstItem="vq9-9U-OfG" firstAttribute="leading" secondItem="IJC-0s-PcC" secondAttribute="leading" id="r2m-W2-Aqm"/>
+                            <constraint firstItem="7qj-2x-Fs6" firstAttribute="leading" secondItem="IJC-0s-PcC" secondAttribute="leading" id="tcY-IV-3dg"/>
+                            <constraint firstItem="V4h-VQ-kmY" firstAttribute="width" secondItem="IJC-0s-PcC" secondAttribute="width" id="yKw-Pa-BqR"/>
+                            <constraint firstItem="V4h-VQ-kmY" firstAttribute="leading" secondItem="IJC-0s-PcC" secondAttribute="leading" id="yQn-ay-8ab"/>
+                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="buttons" destination="2m2-4g-Jdu" id="Kuw-Js-zjZ"/>
+                        <outlet property="cancelButton" destination="bFS-J0-4DF" id="Krp-w0-BKU"/>
+                        <outlet property="done" destination="BuV-QE-3JK" id="DF2-o7-wF2"/>
+                        <outlet property="download" destination="scm-TQ-csR" id="bQL-YJ-ONs"/>
+                        <outlet property="downloadButton" destination="Gup-Yk-g1j" id="2sU-0h-D9f"/>
+                        <outlet property="error" destination="7qj-2x-Fs6" id="p3E-hl-enA"/>
+                        <outlet property="header" destination="vq9-9U-OfG" id="IvS-jK-pzX"/>
+                        <outlet property="heightConstraint" destination="Ddo-gP-AtJ" id="TzY-z1-Nm2"/>
+                        <outlet property="okButton" destination="XnL-Qz-QwG" id="J8I-mw-6O3"/>
+                        <outlet property="setup" destination="V4h-VQ-kmY" id="y6E-1T-P2U"/>
+                        <outlet property="stateLabel" destination="bLO-Nv-EEP" id="bLG-cw-Ltv"/>
+                    </connections>
                 </viewController>
                 <customObject id="n6q-Sv-uaF" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+                <userDefaultsController id="ArV-uQ-5bF"/>
             </objects>
-            <point key="canvasLocation" x="1289" y="32.5"/>
+            <point key="canvasLocation" x="1289" y="-133"/>
         </scene>
         <!--Patient View Controller-->
         <scene sceneID="per-ho-sZ1">
@@ -862,6 +998,17 @@ Gw
                                 <rect key="frame" x="26" y="20" width="650" height="406"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                             </customView>
+                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="EU7-T3-1XK">
+                                <rect key="frame" x="293" y="671" width="66" height="32"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <buttonCell key="cell" type="push" title="Test" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="WtH-Oy-j3j">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="showDownloadManager:" target="XfG-lQ-9wD" id="nTQ-O3-lPG"/>
+                                </connections>
+                            </button>
                         </subviews>
                     </view>
                     <connections>
