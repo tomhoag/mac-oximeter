@@ -15,7 +15,8 @@ class PatientViewController: NSViewController, NSTableViewDelegate {
     @IBOutlet weak var patientArrayController: NSArrayController!
     
     @IBAction func dismissPatientWindow(_ sender: NSButton) {
-        NSApplication.shared.stopModal()
+        guard let window = self.view.window, let parent = window.sheetParent else { return }
+        parent.endSheet(window, returnCode: .cancel)
     }
     
     @IBAction func rowManagement(_ sender: Any) {

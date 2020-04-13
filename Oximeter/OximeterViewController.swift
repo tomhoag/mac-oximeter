@@ -60,10 +60,11 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate, NSTableV
         let storyboard = NSStoryboard(name: "Main", bundle: nil)
         let patientWindowController = storyboard.instantiateController(withIdentifier: "Patient Window") as! NSWindowController
         
-        if let patientWindow = patientWindowController.window {
-            NSApplication.shared.runModal(for: patientWindow)
-            patientWindow.close()
-        }
+        let patientWindow = patientWindowController.window
+        self.view.window?.beginSheet(patientWindow!, completionHandler: { (response) in
+            patientWindow!.close()
+        })
+
     }
     
     var saveReportWithPerson:Person?
@@ -72,14 +73,12 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate, NSTableV
         
         saveReportWithPerson = nil
         
-        let view = downloadView
-        
         let alert = NSAlert()
         
         alert.messageText = "Download Records From Oximeter"
         alert.informativeText = "Turn on and connect your oximeter."
         
-        alert.accessoryView = view
+        alert.accessoryView = downloadView
         alert.addButton(withTitle: "Cancel")
         alert.addButton(withTitle: "Download")
         
