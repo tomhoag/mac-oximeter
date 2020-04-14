@@ -70,6 +70,10 @@ class DownloadViewController: NSViewController, OximeterDeviceDelegate {
     
     fileprivate var baseErrorHeight:CGFloat = 0
     
+    // keep track of number of records downloaded and saved
+    var saveAttempts = 0
+    var savedReadings = 0
+    
     // MARK: - IBActions
     
     @IBAction func checkboxChanged(_ sender: NSButton) {
@@ -123,6 +127,10 @@ class DownloadViewController: NSViewController, OximeterDeviceDelegate {
     
     @IBAction func download(_ sender:NSButton) {
         state = .download
+        
+        saveAttempts = 0
+        savedReadings = 0
+        
         if self.downloadCheckbox.state == .off {
             // get the selected person from the arrayController
             let persons = self.personArrayController.selectedObjects
@@ -145,8 +153,8 @@ class DownloadViewController: NSViewController, OximeterDeviceDelegate {
         baseErrorHeight = error.frame.size.height - disclosureButton.superview!.frame.origin.y
 
         state = .initialize
-//        state = .setup
-        state = .done
+        state = .setup
+//        state = .done
         
     }
     
@@ -178,7 +186,24 @@ class DownloadViewController: NSViewController, OximeterDeviceDelegate {
                 cancelButton.isHidden = true
                 okButton.isHidden = true
                 self.heightConstraint.constant = headerHeight + setup.frame.size.height + buttonsHeight
-                
+            
+            case .setup:
+
+                NSAnimationContext.runAnimationGroup({ (context) in
+                    context.duration = duration
+                    context.completionHandler = {
+                        self.setup.isHidden = false
+                        self.setup.setFrameOrigin(dp)
+                        
+                        self.downloadButton.isHidden = false
+                        self.downloadButton.stringValue = "Download"
+                        
+                        self.cancelButton.isHidden = false
+                        self.okButton.isHidden = true
+                    }
+                    self.heightConstraint.animator().constant = headerHeight + setup.frame.size.height + buttonsHeight
+                })
+            
             case .download:
                 
                 NSAnimationContext.runAnimationGroup({ (context) in
@@ -205,6 +230,23 @@ class DownloadViewController: NSViewController, OximeterDeviceDelegate {
                         self.downloadButton.isHidden = true
                         self.cancelButton.isHidden = true
                         self.okButton.isHidden = false
+                        
+                        self.doneDetails.stringValue = ""
+                        
+                        let part1 = "There were \(self.saveAttempts) readings found on the Oximeter."
+                        var part2 = ""
+                        if 0 == self.savedReadings {
+                            if self.saveAttempts > 0 {
+                                part2 = "No readings were new."
+                            } else {
+                                part2 = ""
+                            }
+                        } else if 1 == self.savedReadings {
+                            part2 = "One reading is new and has been downloaded."
+                        } else if self.savedReadings > 1 {
+                            part2 = "\(self.savedReadings) readings are new and have been downloaded."
+                        }
+                        self.doneDetails.stringValue = part1 + "\n\n" + part2
                     }
                     
                     self.heightConstraint.animator().constant = headerHeight + done.frame.size.height + buttonsHeight
@@ -230,24 +272,6 @@ class DownloadViewController: NSViewController, OximeterDeviceDelegate {
                         self.okButton.isHidden = true
                     }
                     self.heightConstraint.animator().constant = headerHeight + baseErrorHeight + self.disclosureHeightConstraint.constant + buttonsHeight
-                })
-                
-                
-            case .setup:
-                
-                NSAnimationContext.runAnimationGroup({ (context) in
-                    context.duration = duration
-                    context.completionHandler = {
-                        self.setup.isHidden = false
-                        self.setup.setFrameOrigin(dp)
-                        
-                        self.downloadButton.isHidden = false
-                        self.downloadButton.stringValue = "Download"
-
-                        self.cancelButton.isHidden = false
-                        self.okButton.isHidden = true
-                    }
-                    self.heightConstraint.animator().constant = headerHeight + setup.frame.size.height + buttonsHeight
                 })
             }
         }
@@ -303,18 +327,8 @@ class DownloadViewController: NSViewController, OximeterDeviceDelegate {
                     if(connectTries < maxConnectTries) {
                         didConnect(port: nil, success: false)
                     } else {
-                        
                         connectCanceled = true
-                        
                         state = .error
-                        // TODO: setup the error message
-                        //                        let alert = NSAlert.init()
-                        //                        alert.messageText = "Could Not Connect"
-                        //                        alert.informativeText = "An Oximeter could not be found.\n\nPlease check the connections and turn it on."
-                        //                        alert.alertStyle = .informational
-                        //                        alert.addButton(withTitle: "OK")
-                        //                        alert.beginSheetModal(for: self.view.window!) { (response) in }
-                        
                         connecting = false
                     }
                 }
@@ -360,6 +374,8 @@ class DownloadViewController: NSViewController, OximeterDeviceDelegate {
         
         if(reportNumber + 1 <= self.numberOfReports) {
             oximeter.getReportHeader(reportNumber: reportNumber+1)
+        } else {
+            state = .done
         }
     }
     
@@ -370,13 +386,18 @@ class DownloadViewController: NSViewController, OximeterDeviceDelegate {
     // MARK: - Core Data
     func saveReport(_ report:Report) {
         
-        managedContext.mergePolicy =  NSMergeByPropertyObjectTrumpMergePolicy
+        saveAttempts = saveAttempts + 1
+        //managedContext.mergePolicy =  NSMergeByPropertyObjectTrumpMergePolicy
         do {
             try managedContext.save()
             
-        } catch let error as NSError {
-            print(">>>> Could not save. \(error), \(error.userInfo) \(error.localizedDescription)")
+        } catch _ as NSError {
+            //print(">>>> Could not save. \(error), \(error.userInfo) \(error.localizedDescription)")
+            //print(">>> Could not save \(error)")
+            managedContext.delete(report)
+            return
         }
+        savedReadings = savedReadings + 1
     }
 }
 

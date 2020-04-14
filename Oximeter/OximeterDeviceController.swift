@@ -201,7 +201,7 @@ class OximeterDeviceController: NSObject, ORSSerialPortDelegate {
     }
     
     func serialPort(_ serialPort: ORSSerialPort, didEncounterError error: Error) {
-        print("Serial port \(serialPort) encountered an error: \(error)")
+        //print("Serial port \(serialPort) encountered an error: \(error)")
     }
     
     func serialPort(_ serialPort: ORSSerialPort, didReceiveResponse responseData: Data, to request: ORSSerialRequest) {

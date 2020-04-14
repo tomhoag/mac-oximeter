@@ -989,6 +989,9 @@ DQ
                                         <segment width="620" tag="1"/>
                                     </segments>
                                 </segmentedCell>
+                                <connections>
+                                    <action selector="rowManagement:" target="XfG-lQ-9wD" id="ZOD-G5-leT"/>
+                                </connections>
                             </segmentedControl>
                             <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YR1-F9-u9N" customClass="LineChartView" customModule="Charts">
                                 <rect key="frame" x="26" y="20" width="650" height="406"/>

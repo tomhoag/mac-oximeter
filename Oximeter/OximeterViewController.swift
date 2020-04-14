@@ -231,11 +231,7 @@ class OximeterViewController: NSViewController, NSTableViewDelegate {
      */
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         guard let keyPath = keyPath else { return }
-        
-        if let arrayController = object as? NSArrayController {
-            print("observed \(keyPath) on \(String(describing: arrayController.entityName))")
-        }
-        
+
         switch keyPath {
             
         case "selectedObjects":
