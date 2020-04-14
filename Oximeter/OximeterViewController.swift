@@ -13,55 +13,26 @@ import CoreData
 import AppKit
 
 
-class OximeterViewController: NSViewController, OximeterDeviceDelegate, NSTableViewDelegate {
+class OximeterViewController: NSViewController, NSTableViewDelegate {
     
     // MARK: - Bound Items
     
-    @objc dynamic let serialPortManager = ORSSerialPortManager.shared()
-    @objc dynamic let oximeter:OximeterDeviceController = OximeterDeviceController()
-    
     @objc dynamic var chartTitle = ""
-    @objc dynamic var connecting = false
     
     @objc dynamic var managedContext: NSManagedObjectContext!
-    
-    @objc dynamic var selectedPerson: NSManagedObject? {
-        didSet {
-            print("woot yo")
-        }
-    }
-    
-    // MARK: - vars
-    /// number of reports available on the device
-    fileprivate var numberOfReports = 0
-    /// number of times have iterated through available serial ports attempting to connect to the oximeter
-    fileprivate var connectTries = 0
-    /// maximum number of times to attempt to find and connect to the oximeter
-    fileprivate let maxConnectTries = 5
-    /// flag to indicate that user has cancelled connect
-    fileprivate var connectCanceled = false
     
     // MARK: - Outlets & Actions
     @IBOutlet var personArrayController: NSArrayController!
     @IBOutlet var reportArrayController: NSArrayController!
     @IBOutlet weak var reportTable: NSTableView!
     @IBOutlet weak var chartView: LineChartView!
-    
-    @IBOutlet var downloadView: NSView!
-    
-    @IBOutlet weak var downloadCheckbox: NSButton!
-    @IBOutlet weak var downloadPatientPopup: NSPopUpButton!
-    
+            
     @IBAction func showDownloadManager(_ sender:NSButton) {
         let storyboard = NSStoryboard(name: "Main", bundle: nil)
         let downloadViewController = storyboard.instantiateController(withIdentifier: "Download VC") as! NSViewController
         self.presentAsSheet(downloadViewController)
     }
-    
-    @IBAction func checkboxChanged(_ sender: NSButton) {
-        downloadPatientPopup.isEnabled = sender.state == .off
-    }
-    
+
     @IBAction func showPatientWindow(_ sender: Any) {
         
         let storyboard = NSStoryboard(name: "Main", bundle: nil)
@@ -72,37 +43,6 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate, NSTableV
             patientWindow!.close()
         })
 
-    }
-    
-    var saveReportWithPerson:Person?
-    
-    @IBAction func showDownloadWindow(_ sender: Any) {
-        
-        saveReportWithPerson = nil
-        
-        let alert = NSAlert()
-        
-        alert.messageText = "Download Records From Oximeter"
-        alert.informativeText = "Turn on and connect your oximeter."
-        
-        alert.accessoryView = downloadView
-        alert.addButton(withTitle: "Cancel")
-        alert.addButton(withTitle: "Download")
-        
-        alert.beginSheetModal(for: self.view.window!) { (response) in
-            if response == .alertSecondButtonReturn {
-                if self.downloadCheckbox.state == .off {
-                    // get the selected person from the arrayController
-                    let persons = self.personArrayController.selectedObjects
-                    if persons!.count > 0 {
-                        if let selected = persons![0] as? Person {
-                            self.saveReportWithPerson = selected
-                        }
-                    }
-                }
-                self.connect()
-            }
-        }
     }
     
     @IBAction func rowManagement(_ sender: Any) {
@@ -143,41 +83,6 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate, NSTableV
         }
     }
     
-    fileprivate func connect() {
-        
-        guard ORSSerialPortManager.shared().availablePorts.count > 0 else {
-            
-            let alert = NSAlert.init()
-            alert.messageText = "No Serial Ports"
-            alert.informativeText = "There are no serial ports to connect to."
-            alert.alertStyle = .informational
-            alert.addButton(withTitle: "OK")
-            alert.beginSheetModal(for: self.view.window!) { (response) in }
-            return
-        }
-        
-        connectTries = 0
-        connecting = true
-        connectCanceled = false
-        // leverage the delegate response to bootstrap the search and connect
-        didConnect(port: nil, success: false)
-        
-        let alert = NSAlert.init()
-        alert.alertStyle = .informational
-        alert.messageText = "Looking for Oximeter . . . "
-        alert.addButton(withTitle: "Cancel")
-        let progressbar = NSProgressIndicator()
-        progressbar.isIndeterminate = true
-        progressbar.style = .bar
-        progressbar.startAnimation(nil)
-        progressbar.frame = NSRect(x:0, y:0, width:300, height:20)
-        alert.accessoryView = progressbar
-        alert.beginSheetModal(for: self.view.window!) { (response) in
-            self.connectCanceled = true
-            self.view.window!.endSheet(self.view.window!.sheets[0])
-        }
-    }
-    
     // MARK: - ViewController
     
     required init?(coder: NSCoder) {
@@ -190,9 +95,6 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate, NSTableV
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        // Do any additional setup after loading the view.
-        oximeter.delegate = self
         
         reportArrayController.addObserver(self, forKeyPath: "selectedObjects", options: .new, context: nil)
         
@@ -362,96 +264,7 @@ class OximeterViewController: NSViewController, OximeterDeviceDelegate, NSTableV
         }
     }
     
-    // MARK: - OximeterDeviceController Delegate
     
-    func didConnect(port:ORSSerialPort?, success:Bool) {
-        
-        guard false == connectCanceled else {
-            self.view.window!.endSheet(self.view.window!.sheets[0])
-            return
-        }
-        
-        let availablePorts = ORSSerialPortManager.shared().availablePorts
-        if success {
-            connecting = false
-            oximeter.getNumberOfReports()
-        } else {
-            // get the next available port and try again
-            var matchThis = ""
-            if let port = port {
-                matchThis = port.name
-            }
-            if let index = availablePorts.firstIndex(where: {$0.name == matchThis}) {
-                if(index+1 < availablePorts.count) {
-                    let nextPort = availablePorts[index+1]
-                    oximeter.connect(using: nextPort)
-                } else {
-                    connectTries = connectTries + 1
-                    if(connectTries < maxConnectTries) {
-                        didConnect(port: nil, success: false)
-                    } else {
-                        
-                        connectCanceled = true
-                        self.view.window!.endSheet(self.view.window!.sheets[0])
-                        
-                        let alert = NSAlert.init()
-                        alert.messageText = "Could Not Connect"
-                        alert.informativeText = "An Oximeter could not be found.\n\nPlease check the connections and turn it on."
-                        alert.alertStyle = .informational
-                        alert.addButton(withTitle: "OK")
-                        alert.beginSheetModal(for: self.view.window!) { (response) in }
-                        
-                        connecting = false
-                    }
-                }
-            } else {
-                oximeter.connect(using: availablePorts[0])
-            }
-        }
-    }
-    
-    func didGetNumberOfReports(numberOfReports: Int) {
-        
-        guard false == connectCanceled else {
-            self.view.window!.endSheet(self.view.window!.sheets[0])
-            return
-        }
-        
-        self.numberOfReports = numberOfReports
-        if numberOfReports > 0 {
-            oximeter.getReportHeader(reportNumber: 1)
-        }
-    }
-    
-    func didGetReport(header: String, for reportNumber:Int) {
-        let entity = NSEntityDescription.entity(forEntityName: "Report", in: managedContext)!
-        let report = NSManagedObject(entity: entity, insertInto: managedContext) as? Report
-        report!.setValue(header, forKeyPath: "header")
-        oximeter.getReportData(reportNumber: reportNumber, userInfo:report!) // 1-based
-    }
-    
-    func didGetReport(data: String, for reportNumber: Int, userInfo:Any?) {
-        let report = userInfo as! Report
-        report.setValue(data, forKeyPath: "data")
-        
-        if nil != saveReportWithPerson {
-            report.person = self.saveReportWithPerson
-        }
-        saveReport(report)
-        
-        guard false == connectCanceled else {
-            self.view.window!.endSheet(self.view.window!.sheets[0])
-            return
-        }
-        
-        if(reportNumber + 1 <= self.numberOfReports) {
-            oximeter.getReportHeader(reportNumber: reportNumber+1)
-        }
-    }
-    
-    func couldNotCompleteRequest(message: String?) {
-        print("device could not complete request: \(message!)")
-    }
     
     // MARK: - Core Data
     

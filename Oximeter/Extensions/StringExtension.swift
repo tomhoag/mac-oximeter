@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import AppKit
 
 extension String {
     func substring(from: Int, to: Int) -> String {
@@ -17,5 +18,11 @@ extension String {
 
     func substring(range: NSRange) -> String {
         return substring(from: range.lowerBound, to: range.upperBound)
+    }
+    
+    func heightWithConstrainedWidth(width: CGFloat, font: NSFont) -> CGFloat {
+        let constraintRect = CGSize(width: width, height: .greatestFiniteMagnitude)
+        let boundingBox = self.boundingRect(with: constraintRect, options: [.usesLineFragmentOrigin, .usesFontLeading], attributes: [NSAttributedString.Key.font: font], context: nil)
+        return boundingBox.height
     }
 }
