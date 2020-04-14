@@ -41,26 +41,32 @@ class DownloadViewController: NSViewController, OximeterDeviceDelegate {
     @IBOutlet weak var stateLabel:NSTextField!
     
     @IBOutlet weak var header:NSView!
+    
     @IBOutlet weak var setup:NSView!
-    @IBOutlet weak var download:NSView!
-    @IBOutlet weak var error:NSView!
-    @IBOutlet weak var done:NSView!
-    @IBOutlet weak var buttons:NSView!
-    @IBOutlet weak var downloadButton:NSButton!
-    @IBOutlet weak var okButton:NSButton!
-    @IBOutlet weak var cancelButton:NSButton!
     @IBOutlet weak var downloadCheckbox: NSButton!
     @IBOutlet weak var downloadPatientPopup: NSPopUpButton!
+    
+    @IBOutlet weak var download:NSView!
+
+    @IBOutlet weak var done:NSView!
+    @IBOutlet weak var doneTitle:NSTextField!
+    @IBOutlet weak var doneDetails:NSTextField!
+    
+    @IBOutlet weak var error:NSView!
     @IBOutlet weak var disclosureButton:NSButton!
     @IBOutlet weak var disclosureLabel:NSTextField!
     @IBOutlet weak var disclosureHints:NSTextField!
     @IBOutlet weak var disclosureHeightConstraint:NSLayoutConstraint!
     @IBOutlet weak var errorHeightConstraint:NSLayoutConstraint!
     
+    @IBOutlet weak var buttons:NSView!
+    @IBOutlet weak var downloadButton:NSButton!
+    @IBOutlet weak var okButton:NSButton!
+    @IBOutlet weak var cancelButton:NSButton!
+    
     @IBOutlet weak var heightConstraint: NSLayoutConstraint!
     
     @IBOutlet var personArrayController:NSArrayController!
-    
     
     fileprivate var baseErrorHeight:CGFloat = 0
     
@@ -140,8 +146,8 @@ class DownloadViewController: NSViewController, OximeterDeviceDelegate {
 
         state = .initialize
 //        state = .setup
+        state = .done
         
-        state = .error
     }
     
     required init?(coder: NSCoder) {
