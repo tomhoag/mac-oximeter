@@ -8,7 +8,7 @@
 
 import Cocoa
 
-class PatientViewController: NSViewController, NSTableViewDelegate {
+class PatientViewController: NSViewController, NSTableViewDelegate , NSTextFieldDelegate{
     
     @objc dynamic var managedContext: NSManagedObjectContext!
     @IBOutlet weak var patientTable: NSTableView!
@@ -44,20 +44,26 @@ class PatientViewController: NSViewController, NSTableViewDelegate {
         }
     }
     
-    required init?(coder: NSCoder) {
-        super.init(coder:coder)
-        guard let appDelegate = NSApplication.shared.delegate as? AppDelegate else {
-            return
-        }
-        managedContext = appDelegate.persistentContainer.viewContext
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         patientTable.delegate = self
-        // Do view setup here.
+        NotificationCenter.default.addObserver(self, selector: #selector(editingDidEnd(_:)), name: NSControl.textDidEndEditingNotification, object: nil)
     }
     
+    @objc func editingDidEnd(_ obj: Notification) {
+        guard let _ = (obj.object as? NSTextField)?.stringValue else {
+            print("oops")
+            return
+        }
+        let index = patientTable.selectedRow
+        if index > -1 {
+            let patients = self.patientArrayController.selectedObjects
+            guard patients!.count > 0 else {
+                return
+            }
+            try?managedContext.save()
+        }
+    }
     // MARK: - TableViewDelegate
     
     func tableView(_ tableView: NSTableView, rowActionsForRow row: Int, edge: NSTableView.RowActionEdge) -> [NSTableViewRowAction] {

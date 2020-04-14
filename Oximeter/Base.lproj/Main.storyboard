@@ -908,8 +908,8 @@ DQ
                                                                     <connections>
                                                                         <action selector="popupSelectin:" target="XfG-lQ-9wD" id="sPO-Q5-Hf3"/>
                                                                         <binding destination="zKU-mZ-7Ll" name="content" keyPath="arrangedObjects" id="rkP-5B-NBh"/>
-                                                                        <binding destination="zKU-mZ-7Ll" name="contentValues" keyPath="arrangedObjects.firstName" previousBinding="rkP-5B-NBh" id="c9K-4L-4um"/>
-                                                                        <binding destination="mR0-WS-dsS" name="selectedObject" keyPath="selection.person" previousBinding="c9K-4L-4um" id="ELU-iS-g9p"/>
+                                                                        <binding destination="zKU-mZ-7Ll" name="contentValues" keyPath="arrangedObjects.shortDescription" previousBinding="rkP-5B-NBh" id="L24-vT-IRI"/>
+                                                                        <binding destination="mR0-WS-dsS" name="selectedObject" keyPath="selection.person" previousBinding="L24-vT-IRI" id="m8s-H2-EVT"/>
                                                                     </connections>
                                                                 </popUpButton>
                                                                 <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yC6-Uy-v3h">

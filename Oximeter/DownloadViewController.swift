@@ -154,16 +154,6 @@ class DownloadViewController: NSViewController, OximeterDeviceDelegate {
 
         state = .initialize
         state = .setup
-//        state = .done
-        
-    }
-    
-    required init?(coder: NSCoder) {
-        super.init(coder:coder)
-        guard let appDelegate = NSApplication.shared.delegate as? AppDelegate else {
-            return
-        }
-        managedContext = appDelegate.persistentContainer.viewContext
     }
     
     dynamic var state:DownloadState = .error {

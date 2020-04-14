@@ -29,7 +29,8 @@ class OximeterViewController: NSViewController, NSTableViewDelegate {
             
     @IBAction func showDownloadManager(_ sender:NSButton) {
         let storyboard = NSStoryboard(name: "Main", bundle: nil)
-        let downloadViewController = storyboard.instantiateController(withIdentifier: "Download VC") as! NSViewController
+        let downloadViewController = storyboard.instantiateController(withIdentifier: "Download VC") as! DownloadViewController
+        downloadViewController.managedContext = managedContext
         self.presentAsSheet(downloadViewController)
     }
 
@@ -39,7 +40,12 @@ class OximeterViewController: NSViewController, NSTableViewDelegate {
         let patientWindowController = storyboard.instantiateController(withIdentifier: "Patient Window") as! NSWindowController
         
         let patientWindow = patientWindowController.window
+        
+        let pvc = patientWindow?.contentViewController as! PatientViewController
+        pvc.managedContext = managedContext
+        
         self.view.window?.beginSheet(patientWindow!, completionHandler: { (response) in
+            self.managedContext.refreshAllObjects()
             patientWindow!.close()
         })
 

@@ -12,7 +12,17 @@ extension Person {
     
     @objc dynamic var shortDescription:String {
         get {
-            return ("\(self.id!) \(self.firstName ?? "") \(self.lastName ?? "")")
+            let fname = (self.firstName ?? "")
+            let sep1 = fname.count > 0 ? " " : ""
+            var lname = ""
+            if let last = self.lastName {
+                if last.count > 0 {
+                    lname = last.substring(from: 0, to: 1)
+                }
+            }
+            let sep2 = lname.count > 0 ? " " : ""
+            let idname = "(" + (self.id ?? "No ID") + ")"
+            return fname + sep1 + lname + sep2 + idname
         }
     }
     
