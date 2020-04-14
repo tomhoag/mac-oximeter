@@ -37,7 +37,6 @@ class DownloadViewController: NSViewController, OximeterDeviceDelegate {
     @objc dynamic var managedContext: NSManagedObjectContext!
     
     fileprivate var timer:Timer!
-    @objc dynamic var stateString = "setup"
     
     @IBOutlet weak var stateLabel:NSTextField!
     
@@ -61,6 +60,9 @@ class DownloadViewController: NSViewController, OximeterDeviceDelegate {
     @IBOutlet weak var heightConstraint: NSLayoutConstraint!
     
     @IBOutlet var personArrayController:NSArrayController!
+    
+    
+    fileprivate var baseErrorHeight:CGFloat = 0
     
     // MARK: - IBActions
     
@@ -96,6 +98,8 @@ class DownloadViewController: NSViewController, OximeterDeviceDelegate {
                 }
             }
             self.disclosureHeightConstraint.animator().constant = newHeight
+            self.heightConstraint.animator().constant = header.frame.size.height + baseErrorHeight + newHeight + buttons.frame.size.height
+
         })
     }
     
@@ -131,7 +135,8 @@ class DownloadViewController: NSViewController, OximeterDeviceDelegate {
         super.viewDidLoad()
         oximeter.delegate = self
         
-        
+        // used to dynamically change the size of the view when in the .error state
+        baseErrorHeight = error.frame.size.height - disclosureButton.superview!.frame.origin.y
 
         state = .initialize
 //        state = .setup
@@ -166,10 +171,9 @@ class DownloadViewController: NSViewController, OximeterDeviceDelegate {
                 downloadButton.isHidden = true
                 cancelButton.isHidden = true
                 okButton.isHidden = true
-                self.heightConstraint.constant = header.frame.size.height + setup.frame.size.height + buttons.frame.size.height
+                self.heightConstraint.constant = headerHeight + setup.frame.size.height + buttonsHeight
                 
             case .download:
-                stateString = "download"
                 
                 NSAnimationContext.runAnimationGroup({ (context) in
                     context.duration = duration
@@ -185,7 +189,6 @@ class DownloadViewController: NSViewController, OximeterDeviceDelegate {
                 })
                 
             case .done:
-                stateString = "done"
                 
                 NSAnimationContext.runAnimationGroup({ (context) in
                     context.duration = duration
@@ -202,12 +205,11 @@ class DownloadViewController: NSViewController, OximeterDeviceDelegate {
                 })
                 
             case .error:
-                stateString = "errorNotFound"
                 
                 disclosureButton.state = .off
                 self.disclosureButton.state = .off
                 self.disclosureLabel.stringValue = "More Info"
-                self.disclosureHints.stringValue = "1. This\n2.  That\n3.  The other thing"
+                self.disclosureHints.stringValue = "1.  Plug the Oximeter into a USB port\n2.  Turn the Oximeter on\n3.  Set the Oximeter to \"Upload Data\"\n4.  Press \"Try Again\""
                 self.disclosureHeightConstraint.constant = 0
                 
                 NSAnimationContext.runAnimationGroup({ (context) in
@@ -216,16 +218,16 @@ class DownloadViewController: NSViewController, OximeterDeviceDelegate {
                         self.error.setFrameOrigin(dp)
                         self.error.isHidden = false
                         
-                        self.downloadButton.isHidden = true
-                        self.cancelButton.isHidden = true
-                        self.okButton.isHidden = false
+                        self.downloadButton.isHidden = false
+                        self.downloadButton.title = "Try Again"
+                        self.cancelButton.isHidden = false
+                        self.okButton.isHidden = true
                     }
-                    self.heightConstraint.animator().constant = headerHeight + error.frame.size.height + buttonsHeight
+                    self.heightConstraint.animator().constant = headerHeight + baseErrorHeight + self.disclosureHeightConstraint.constant + buttonsHeight
                 })
                 
                 
             case .setup:
-                stateString = "setup"
                 
                 NSAnimationContext.runAnimationGroup({ (context) in
                     context.duration = duration
@@ -234,6 +236,8 @@ class DownloadViewController: NSViewController, OximeterDeviceDelegate {
                         self.setup.setFrameOrigin(dp)
                         
                         self.downloadButton.isHidden = false
+                        self.downloadButton.stringValue = "Download"
+
                         self.cancelButton.isHidden = false
                         self.okButton.isHidden = true
                     }

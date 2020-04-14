@@ -305,11 +305,11 @@
                                     <constraint firstAttribute="height" constant="105" id="WfE-9t-vAA"/>
                                 </constraints>
                             </customView>
-                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="7qj-2x-Fs6" userLabel="Not Found" customClass="OxView" customModule="Oximeter" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="150" width="414" height="180"/>
+                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="7qj-2x-Fs6" userLabel="Error" customClass="OxView" customModule="Oximeter" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="190" width="414" height="140"/>
                                 <subviews>
                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="4Nd-dO-Duu">
-                                        <rect key="frame" x="22" y="151" width="230" height="19"/>
+                                        <rect key="frame" x="22" y="114" width="230" height="19"/>
                                         <textFieldCell key="cell" lineBreakMode="clipping" title="The Oximeter could not be found" id="Psc-qn-W4u">
                                             <font key="font" metaFont="system" size="15"/>
                                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -317,7 +317,7 @@
                                         </textFieldCell>
                                     </textField>
                                     <stackView distribution="fill" orientation="horizontal" alignment="centerY" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QDf-rT-puH" userLabel="Button Stack View">
-                                        <rect key="frame" x="24" y="125" width="79" height="16"/>
+                                        <rect key="frame" x="24" y="88" width="79" height="16"/>
                                         <subviews>
                                             <button horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="9b8-Pg-rNp">
                                                 <rect key="frame" x="0.0" y="2" width="13" height="13"/>
@@ -351,7 +351,7 @@
                                         </customSpacing>
                                     </stackView>
                                     <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="06U-gM-xnS">
-                                        <rect key="frame" x="42" y="37" width="354" height="88"/>
+                                        <rect key="frame" x="42" y="0.0" width="354" height="88"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="88" id="2NC-Ef-R3B"/>
                                         </constraints>
@@ -363,14 +363,15 @@
                                     </textField>
                                 </subviews>
                                 <constraints>
-                                    <constraint firstItem="QDf-rT-puH" firstAttribute="top" secondItem="4Nd-dO-Duu" secondAttribute="bottom" constant="10" id="5d2-6p-cjv"/>
-                                    <constraint firstItem="06U-gM-xnS" firstAttribute="top" secondItem="QDf-rT-puH" secondAttribute="bottom" id="BIc-LJ-Fom"/>
+                                    <constraint firstItem="QDf-rT-puH" firstAttribute="bottom" secondItem="06U-gM-xnS" secondAttribute="top" id="5d2-6p-cjv"/>
                                     <constraint firstItem="06U-gM-xnS" firstAttribute="leading" secondItem="QDf-rT-puH" secondAttribute="leading" constant="20" id="BTI-Ur-F3M"/>
                                     <constraint firstAttribute="trailing" secondItem="06U-gM-xnS" secondAttribute="trailing" constant="20" id="JfT-fE-ql4"/>
+                                    <constraint firstItem="4Nd-dO-Duu" firstAttribute="leading" secondItem="QDf-rT-puH" secondAttribute="trailing" constant="-79" id="N5E-hF-ucU"/>
+                                    <constraint firstItem="QDf-rT-puH" firstAttribute="top" secondItem="4Nd-dO-Duu" secondAttribute="bottom" constant="10" id="R00-mP-qmG"/>
                                     <constraint firstItem="QDf-rT-puH" firstAttribute="leading" secondItem="4Nd-dO-Duu" secondAttribute="leading" id="S1S-OQ-sqe"/>
+                                    <constraint firstAttribute="bottom" secondItem="06U-gM-xnS" secondAttribute="bottom" id="WjW-1O-neJ"/>
+                                    <constraint firstAttribute="height" constant="140" id="ZPs-O9-tkQ"/>
                                     <constraint firstItem="4Nd-dO-Duu" firstAttribute="leading" secondItem="7qj-2x-Fs6" secondAttribute="leading" constant="24" id="jDX-4q-Jpv"/>
-                                    <constraint firstAttribute="height" constant="180" id="mPj-80-gz5"/>
-                                    <constraint firstItem="4Nd-dO-Duu" firstAttribute="top" secondItem="7qj-2x-Fs6" secondAttribute="top" constant="10" id="yXx-Qy-dWC"/>
                                 </constraints>
                             </customView>
                             <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="BuV-QE-3JK" userLabel="Done">
@@ -471,7 +472,7 @@ DQ
                         <outlet property="downloadCheckbox" destination="htA-vZ-g2A" id="XQk-cT-Tsb"/>
                         <outlet property="downloadPatientPopup" destination="oBg-eu-FBz" id="byS-PQ-5hG"/>
                         <outlet property="error" destination="7qj-2x-Fs6" id="p3E-hl-enA"/>
-                        <outlet property="errorHeightConstraint" destination="mPj-80-gz5" id="Ngg-eY-Qtb"/>
+                        <outlet property="errorHeightConstraint" destination="ZPs-O9-tkQ" id="rDa-PR-8YB"/>
                         <outlet property="header" destination="vq9-9U-OfG" id="IvS-jK-pzX"/>
                         <outlet property="heightConstraint" destination="Ddo-gP-AtJ" id="TzY-z1-Nm2"/>
                         <outlet property="okButton" destination="XnL-Qz-QwG" id="J8I-mw-6O3"/>
