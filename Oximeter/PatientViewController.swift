@@ -16,6 +16,7 @@ class PatientViewController: NSViewController, NSTableViewDelegate , NSTextField
     
     @IBAction func dismissPatientWindow(_ sender: NSButton) {
         guard let window = self.view.window, let parent = window.sheetParent else { return }
+        self.managedContext.refreshAllObjects()        
         parent.endSheet(window, returnCode: .cancel)
     }
     

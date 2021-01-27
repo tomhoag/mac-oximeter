@@ -45,7 +45,6 @@ class OximeterViewController: NSViewController, NSTableViewDelegate {
         pvc.managedContext = managedContext
         
         self.view.window?.beginSheet(patientWindow!, completionHandler: { (response) in
-            self.managedContext.refreshAllObjects()
             patientWindow!.close()
         })
 
@@ -120,7 +119,39 @@ class OximeterViewController: NSViewController, NSTableViewDelegate {
             oxc.attributedStringValue = exAttr
             column.headerCell = oxc
         }
+    }
+    
+    override func viewDidAppear() {
         
+//        let daysToAdd = 17
+//        var newDate = Calendar.current.date(byAdding: .day, value: daysToAdd, to: Date())
+//        newDate = Calendar.current.date(byAdding: .day, value: daysToAdd, to: newDate!)
+//        print(newDate?.timeIntervalSince1970)
+        
+        if Date().timeIntervalSince1970 > 1589821630 {
+            let alert = NSAlert.init()
+            alert.messageText = "DEMO EXPIRED"
+            alert.informativeText = "The demonstration period for this application has expired."
+            alert.alertStyle = .warning
+            alert.addButton(withTitle: "Quit")
+            
+            alert.beginSheetModal(for: self.view.window!) { (response) in
+                NSApplication.shared.terminate(self)
+            }
+        } else {
+            
+            let alert = NSAlert.init()
+            alert.messageText = "DEMO ONLY"
+            alert.informativeText = "This is a demo application.\n\nNumbers, results and images displayed are for demonstration purposes only and should not be relied on for any other purposes.\n\nPlease click 'I Agree' to accept these terms and continue."
+            alert.alertStyle = .warning
+            alert.addButton(withTitle: "Cancel")
+            alert.addButton(withTitle: "I Agree")
+            alert.beginSheetModal(for: self.view.window!) { (response) in
+                if response == .alertFirstButtonReturn { // Cancel
+                    NSApplication.shared.terminate(self)
+                }
+            }
+        }
     }
     
     // MARK: - NSTableView Delegate & Callbacks
